@@ -40,7 +40,7 @@ header{background:var(--white);border-bottom:1px solid var(--line);position:stic
 main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 .section{margin-bottom:112px;background:#fff;}
 .section-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-top:8px;}
-.section-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-title{font-family:'Inter',sans-serif;font-size:26px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .section-line{flex:1;height:1.5px;background:var(--grad);opacity:.25;}
 .section-count{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);}
 
@@ -81,6 +81,12 @@ textarea.fi{min-height:68px;}
 }
 .btn-action:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,176,200,.05);}
 .btn-action.del:hover{border-color:#e05050;color:#e05050;background:rgba(224,80,80,.05);}
+
+/* CAT ORDER BUTTONS */
+.cat-tab-wrap{display:inline-flex;align-items:center;gap:2px;}
+.cat-order-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:10px;padding:1px 3px;line-height:1;border-radius:3px;transition:color .15s,background .15s;}
+.cat-order-btn:hover{color:var(--cyan);background:rgba(0,176,200,.08);}
+.cat-order-btn:disabled{opacity:.25;cursor:default;}
 
 /* CAT TABS */
 .cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
@@ -299,15 +305,16 @@ function setupDrag(containerId,arr,key,renderFn){
       const dy=clientY-startY;
       const r=card.getBoundingClientRect();
       clone.style.top=(r.top+dy)+'px';
-      // find insertion point
       const others=allCards().filter(c=>c!==card);
       let before=null;
       for(const c of others){
         const cr=c.getBoundingClientRect();
         if(clientY<cr.top+cr.height*.5){before=c;break;}
       }
-      if(before) container.insertBefore(ghost,before);
-      else container.appendChild(ghost);
+      try{
+        if(before&&container.contains(before)) container.insertBefore(ghost,before);
+        else container.appendChild(ghost);
+      }catch(e){}
     }
 
     function end(){
@@ -347,13 +354,47 @@ function setupDrag(containerId,arr,key,renderFn){
   });
 }
 
-// ── CAT TABS HELPER (avoids nested template literals for iOS Safari) ──
+// ── CAT ORDER STORAGE ─────────────────────────────────
+var catOrder={
+  todo: S.get('mp_catorder_todo',[]),
+  link: S.get('mp_catorder_link',[]),
+  memo: S.get('mp_catorder_memo',[])
+};
+
+function getSortedCats(type, arr){
+  var all=getCats(arr);
+  var order=catOrder[type];
+  // merge: keep saved order, append new cats not yet in order
+  var sorted=order.filter(function(c){return all.indexOf(c)>=0;});
+  all.forEach(function(c){if(sorted.indexOf(c)<0)sorted.push(c);});
+  return sorted;
+}
+
+function moveCat(type, cat, dir){
+  var arr=type==='todo'?todos:type==='link'?links:memos;
+  var cats=getSortedCats(type,arr);
+  var i=cats.indexOf(cat);
+  var j=i+dir;
+  if(j<0||j>=cats.length)return;
+  var tmp=cats[i];cats[i]=cats[j];cats[j]=tmp;
+  catOrder[type]=cats;
+  S.set('mp_catorder_'+type,cats);
+  if(type==='todo')renderTodos();
+  else if(type==='link')renderLinks();
+  else renderMemos();
+}
+
+// ── CAT TABS HELPER ───────────────────────────────────
 function catTabsHTML(type, cats, active){
   if(!cats.length) return '';
   var html='<div class="cat-tabs">';
   html+='<div class="cat-tab'+(active===''?' active':'')+'" onclick="setFilter(\''+type+'\',\'\')">すべて</div>';
-  cats.forEach(function(c){
+  cats.forEach(function(c, i){
+    html+='<div class="cat-tab-wrap" style="display:inline-flex;align-items:center;gap:2px;">';
     html+='<div class="cat-tab'+(active===c?' active':'')+'" onclick="setFilter(\''+type+'\',\''+esc(c)+'\')">'+esc(c)+'</div>';
+    html+='<button class="cat-order-btn" onclick="moveCat(\''+type+'\',\''+esc(c)+'\',-1)" title="上へ"'+(i===0?' disabled':'')+'>↑</button>';
+    html+='<button class="cat-order-btn" onclick="moveCat(\''+type+'\',\''+esc(c)+'\',1)" title="下へ"'+(i===cats.length-1?' disabled':'')+'>↓</button>';
+    html+='</div>';
   });
   html+='</div>';
   return html;
@@ -371,7 +412,7 @@ function setFilter(type,cat){
 // ── TODO ───────────────────────────────────────────────
 function renderTodos(){
   const sec=document.getElementById('sec-todo');
-  const cats=getCats(todos);
+  const cats=getSortedCats('todo',todos);
   const vis=F.todo?todos.filter(t=>t.cat===F.todo):todos;
   const grouped=groupBy(vis);
 
@@ -399,9 +440,13 @@ ${catTabsHTML('todo',cats,F.todo)}
   bindCatAC('tc','tc-sug',()=>getCats(todos));
   const list=document.getElementById('todo-list');
   if(!vis.length){list.innerHTML='<div class="empty">タスクはありません</div>';return;}
-  Object.entries(grouped).forEach(([cat,items])=>{
+  // render in cat order (uncategorized last)
+  var orderedKeys=cats.filter(function(c){return grouped[c];});
+  if(grouped[''])orderedKeys.push('');
+  orderedKeys.forEach(function(cat){
+    var items=grouped[cat];if(!items)return;
     const g=document.createElement('div');g.className='cat-group';
-    if(cat)g.innerHTML=`<div class="cat-group-label"><span class="cat-badge">${esc(cat)}</span></div>`;
+    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge">'+esc(cat)+'</span></div>';
     items.forEach(t=>{
       const card=document.createElement('div');card.className='item-card'+(t.done?' done':'');card.dataset.id=t.id;
       card.innerHTML=`
@@ -466,7 +511,7 @@ function delTodo(id){confirmDel(()=>{todos=todos.filter(x=>x.id!==id);S.set('mp_
 // ── LINKS ──────────────────────────────────────────────
 function renderLinks(){
   const sec=document.getElementById('sec-links');
-  const cats=getCats(links);
+  const cats=getSortedCats('link',links);
   const vis=F.link?links.filter(l=>l.cat===F.link):links;
   const grouped=groupBy(vis);
 
@@ -493,9 +538,12 @@ ${catTabsHTML('link',cats,F.link)}
   bindCatAC('lc','lc-sug',()=>getCats(links));
   const list=document.getElementById('link-list');
   if(!vis.length){list.innerHTML='<div class="empty">リンクはありません</div>';return;}
-  Object.entries(grouped).forEach(([cat,items])=>{
+  var orderedKeys=cats.filter(function(c){return grouped[c];});
+  if(grouped[''])orderedKeys.push('');
+  orderedKeys.forEach(function(cat){
+    var items=grouped[cat];if(!items)return;
     const g=document.createElement('div');g.className='cat-group';
-    if(cat)g.innerHTML=`<div class="cat-group-label"><span class="cat-badge">${esc(cat)}</span></div>`;
+    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge">'+esc(cat)+'</span></div>';
     items.forEach(lk=>{
       const sc=lk.status==='ok'?'ls-ok':lk.status==='ng'?'ls-ng':lk.status==='chk'?'ls-chk':'';
       const card=document.createElement('div');card.className='item-card';card.dataset.id=lk.id;
@@ -562,7 +610,7 @@ async function checkAllLinks(){for(const lk of links)await checkLink(lk.id);toas
 // ── MEMOS ──────────────────────────────────────────────
 function renderMemos(){
   const sec=document.getElementById('sec-memo');
-  const cats=getCats(memos);
+  const cats=getSortedCats('memo',memos);
   const vis=F.memo?memos.filter(m=>m.cat===F.memo):memos;
   const grouped=groupBy([...vis].reverse());
 
@@ -585,9 +633,12 @@ ${catTabsHTML('memo',cats,F.memo)}
   bindCatAC('mc','mc-sug',()=>getCats(memos));
   const list=document.getElementById('memo-list');
   if(!vis.length){list.innerHTML='<div class="empty">メモはありません</div>';return;}
-  Object.entries(grouped).forEach(([cat,items])=>{
+  var orderedKeys=cats.filter(function(c){return grouped[c];});
+  if(grouped[''])orderedKeys.push('');
+  orderedKeys.forEach(function(cat){
+    var items=grouped[cat];if(!items)return;
     const g=document.createElement('div');g.className='cat-group';
-    if(cat)g.innerHTML=`<div class="cat-group-label"><span class="cat-badge">${esc(cat)}</span></div>`;
+    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge">'+esc(cat)+'</span></div>';
     items.forEach(m=>{
       const card=document.createElement('div');card.className='item-card';card.dataset.id=m.id;
       card.innerHTML=`
