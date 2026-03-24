@@ -357,6 +357,13 @@ if(sessionStorage.getItem('pin_ok')==='1'){
   pinUnlocked=true;
 }
 
+// キーボード入力対応
+document.addEventListener('keydown',function(e){
+  if(pinUnlocked)return;
+  if(e.key>='0'&&e.key<='9')pinInput(e.key);
+  else if(e.key==='Backspace')pinDel();
+});
+
 // ── STORAGE ──────────────────────────────────────────────
 const S={
   get(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch{return d;}},
