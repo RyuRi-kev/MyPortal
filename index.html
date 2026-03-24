@@ -256,7 +256,11 @@ function bindCatAC(inputId,sugId,getCatsFn){
     const v=inp.value.toLowerCase();
     const cs=getCatsFn().filter(c=>c.toLowerCase().includes(v));
     if(cs.length&&inp.value){
-      sug.innerHTML=cs.map(c=>`<div class="cs-item" onmousedown="event.preventDefault();document.getElementById('${inputId}').value='${esc(c)}';document.getElementById('${sugId}').classList.remove('open')">${esc(c)}</div>`).join('');
+      var html='';
+      cs.forEach(function(c){
+        html+='<div class="cs-item" onmousedown="event.preventDefault();document.getElementById(\''+inputId+'\').value=\''+esc(c)+'\';document.getElementById(\''+sugId+'\').classList.remove(\'open\')">'+esc(c)+'</div>';
+      });
+      sug.innerHTML=html;
       sug.classList.add('open');
     }else sug.classList.remove('open');
   });
@@ -345,6 +349,18 @@ function setupDrag(containerId,arr,key,renderFn){
   });
 }
 
+// ── CAT TABS HELPER (avoids nested template literals for iOS Safari) ──
+function catTabsHTML(type, cats, active){
+  if(!cats.length) return '';
+  var html='<div class="cat-tabs">';
+  html+='<div class="cat-tab'+(active===''?' active':'')+'" onclick="setFilter(\''+type+'\',\'\')">すべて</div>';
+  cats.forEach(function(c){
+    html+='<div class="cat-tab'+(active===c?' active':'')+'" onclick="setFilter(\''+type+'\',\''+esc(c)+'\')">'+esc(c)+'</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
 // ── FILTER STATE ───────────────────────────────────────
 const F={todo:'',link:'',memo:''};
 function setFilter(type,cat){
@@ -379,7 +395,7 @@ function renderTodos(){
     <button class="btn btn-grad btn-sm" onclick="addTodo()">追加</button>
   </div>
 </div>
-${cats.length?`<div class="cat-tabs"><div class="cat-tab${!F.todo?' active':''}" onclick="setFilter('todo','')">すべて</div>${cats.map(c=>`<div class="cat-tab${F.todo===c?' active':''}" onclick="setFilter('todo','${esc(c)}')">${esc(c)}</div>`).join('')}</div>`:''}
+${catTabsHTML('todo',cats,F.todo)}
 <div id="todo-list"></div>`;
 
   bindCatAC('tc','tc-sug',()=>getCats(todos));
@@ -473,7 +489,7 @@ function renderLinks(){
     <button class="btn btn-ghost btn-sm" onclick="checkAllLinks()">全チェック</button>
   </div>
 </div>
-${cats.length?`<div class="cat-tabs"><div class="cat-tab${!F.link?' active':''}" onclick="setFilter('link','')">すべて</div>${cats.map(c=>`<div class="cat-tab${F.link===c?' active':''}" onclick="setFilter('link','${esc(c)}')">${esc(c)}</div>`).join('')}</div>`:''}
+${catTabsHTML('link',cats,F.link)}
 <div id="link-list"></div>`;
 
   bindCatAC('lc','lc-sug',()=>getCats(links));
@@ -566,7 +582,7 @@ function renderMemos(){
     <button class="btn btn-grad btn-sm" onclick="addMemo()">保存</button>
   </div>
 </div>
-${cats.length?`<div class="cat-tabs"><div class="cat-tab${!F.memo?' active':''}" onclick="setFilter('memo','')">すべて</div>${cats.map(c=>`<div class="cat-tab${F.memo===c?' active':''}" onclick="setFilter('memo','${esc(c)}')">${esc(c)}</div>`).join('')}</div>`:''}
+${catTabsHTML('memo',cats,F.memo)}
 <div id="memo-list"></div>`;
 
 bindCatAC(‘mc’,‘mc-sug’,()=>getCats(memos));
