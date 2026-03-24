@@ -361,6 +361,61 @@ body::after {
 }
 
 /* --- ここまで追加 --- */
+/* --- ここから追記 --- */
+
+/* 1. 背景を透過させてデザインを見えるようにする */
+body, .container, section, .card {
+    background-color: transparent !important; /* コンテンツの背景を透かす */
+}
+
+html {
+    background-color: #f8f9fa; /* ベースの薄いグレー（元の背景色） */
+}
+
+/* 2. 斜めに貫くダイナミックな光の帯 */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 200vw; /* 画面よりかなり大きくして斜めに配置 */
+    height: 60vh;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(100px); /* 強くぼかしてお洒落な質感に */
+}
+
+/* 左上：マゼンタの強い強調 */
+body::before {
+    top: -10%;
+    left: -20%;
+    background: linear-gradient(90deg, 
+        rgba(255, 0, 255, 0.6) 0%, 
+        rgba(255, 0, 255, 0.2) 50%, 
+        transparent 100%
+    );
+    transform: rotate(-25deg); /* 斜めに貫く角度 */
+}
+
+/* 右下：シアンの強調 */
+body::after {
+    bottom: -10%;
+    right: -20%;
+    background: linear-gradient(270deg, 
+        rgba(0, 255, 255, 0.5) 0%, 
+        rgba(0, 255, 255, 0.1) 50%, 
+        transparent 100%
+    );
+    transform: rotate(-25deg); /* 同じ角度で対角線上に配置 */
+}
+
+/* 3. 文字を読みやすくするための微調整 */
+h2, .todo-item, .memo-text {
+    position: relative;
+    z-index: 1; /* 文字を背景より前面に出す */
+    text-shadow: 0 0 10px rgba(255,255,255,0.8); /* 白い光彩で読みやすく */
+}
+
+/* --- ここまで追記 --- */
 
 
 </style>
