@@ -120,9 +120,8 @@ textarea.fi{min-height:68px;}
 
 /* CAT GROUP */
 .cat-group{margin-bottom:12px;}
-.cat-group-label{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-left:2px;}
-.cat-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:500;background:var(--grad-soft);color:var(--cyan);border:1px solid rgba(0,176,200,.2);}
-
+.cat-group-label{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-left:2px;width:100%;padding-right:95px;}
+.cat-badge{display:block;flex-grow:1;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:500;background:var(--grad-soft);color:var(--cyan);border:1px solid rgba(0,176,200,.2);}
 /* ITEM CARD - flat, no shadow, no border */
 .item-card{background:#fff;border:none;border-radius:0;box-shadow:none;margin-bottom:2px;display:flex;align-items:stretch;position:relative;transition:background .15s;animation:rise .25s ease both;overflow:hidden;}
 .item-card:hover{background:#fafafa;}
@@ -630,9 +629,6 @@ function renderTodos(){
 <div class="add-form">
   <div class="form-row">
     <input class="fi" id="tt" placeholder="タスクを入力…" onkeydown="if(event.key==='Enter')addTodo()">
-    <select class="fi fi-auto" id="tp" style="width:72px">
-      <option value="high">高</option><option value="mid" selected>中</option><option value="low">低</option>
-    </select>
   </div>
   <div class="form-row">
     <div class="cat-wrap"><input class="fi" id="tc" placeholder="分類（任意）" autocomplete="off"><div class="cat-sug" id="tc-sug"></div></div>
@@ -662,7 +658,6 @@ ${catTabsHTML('todo',cats,F.todo)}
       <div class="todo-row">
         <div class="t-check" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</div>
         <div class="todo-txt">${esc(t.text)}</div>
-        <div class="p-dot p${t.priority||'m'}" title="優先度：${t.priority||'mid'}"></div>
       </div>
     </div>
     <div class="item-actions">
@@ -673,11 +668,6 @@ ${catTabsHTML('todo',cats,F.todo)}
   <div class="edit-form" id="te-${t.id}">
     <div class="form-row">
       <input class="fi" id="tei-${t.id}" value="${esc(t.text)}" placeholder="タスク">
-      <select class="fi fi-auto" id="tep-${t.id}" style="width:72px">
-        <option value="high"${t.priority==='high'?' selected':''}>高</option>
-        <option value="mid"${(!t.priority||t.priority==='mid')?' selected':''}>中</option>
-        <option value="low"${t.priority==='low'?' selected':''}>低</option>
-      </select>
     </div>
     <div class="form-row">
       <div class="cat-wrap"><input class="fi" id="tec-${t.id}" value="${esc(t.cat||'')}" placeholder="分類" autocomplete="off"><div class="cat-sug" id="tec-sug-${t.id}"></div></div>
@@ -696,7 +686,7 @@ ${catTabsHTML('todo',cats,F.todo)}
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
   if(!text){toast('タスクを入力してください');return;}
-  todos.push({id:uid(),text,priority:document.getElementById('tp').value,cat:document.getElementById('tc').value.trim(),done:false});
+  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false});
   S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';
   renderTodos();toast('追加しました');
 }
@@ -707,7 +697,6 @@ function saveTodoEdit(id){
   const t=todos.find(x=>x.id===id);if(!t)return;
   const v=document.getElementById(`tei-${id}`).value.trim();
   if(v)t.text=v;
-  t.priority=document.getElementById(`tep-${id}`).value;
   t.cat=document.getElementById(`tec-${id}`).value.trim();
   S.set('mp_todos',todos);renderTodos();toast('更新しました');
 }
