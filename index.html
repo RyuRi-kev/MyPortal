@@ -28,13 +28,13 @@ html{background:#fff;}
 body{background:#fff;color:var(--ink);font-family:'Inter','Noto Sans JP',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
 
 /* HEADER */
-header{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:200;}
+header{background:var(--grad);border:none;position:sticky;top:0;z-index:200;}
 .header-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;}
-.logo{display:flex;align-items:center;gap:7px;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em;text-decoration:none;color:var(--muted);}
-.logo:hover{color:var(--ink2);}
-.logo-mark{width:18px;height:18px;border-radius:5px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0;}
-#hdate{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);letter-spacing:.03em;}
-.accent-strip{height:2px;background:var(--grad);}
+.logo{display:flex;align-items:center;gap:7px;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em;text-decoration:none;color:#fff;}
+.logo:hover{color:rgba(255,255,255,.85);}
+.logo-mark{width:18px;height:18px;border-radius:5px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0;}
+#hdate{font-family:'Inter',sans-serif;font-size:11.5px;color:#fff;letter-spacing:.03em;}
+.accent-strip{display:none;}
 
 /* MAIN */
 main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
@@ -99,13 +99,13 @@ textarea.fi{min-height:68px;}
 .cat-group-label{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-left:2px;}
 .cat-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:500;background:var(--grad-soft);color:var(--cyan);border:1px solid rgba(0,176,200,.2);}
 
-/* ITEM CARD - shadow only, no border */
-.item-card{background:#fff;border:none;border-radius:8px;box-shadow:var(--sh);margin-bottom:8px;display:flex;align-items:stretch;position:relative;transition:box-shadow .2s,transform .18s;animation:rise .25s ease both;overflow:hidden;}
-.item-card:hover{box-shadow:var(--sh2);}
+/* ITEM CARD - flat, no shadow, no border */
+.item-card{background:#fff;border:none;border-radius:0;box-shadow:none;margin-bottom:2px;display:flex;align-items:stretch;position:relative;transition:background .15s;animation:rise .25s ease both;overflow:hidden;}
+.item-card:hover{background:#fafafa;}
 .item-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad);opacity:0;transition:opacity .2s;}
 .item-card:hover::before{opacity:1;}
 .item-card.dragging{opacity:.45;transform:scale(.97);}
-.item-card.drag-over{box-shadow:0 0 0 2px rgba(0,176,200,.3),var(--sh2);}
+.item-card.drag-over{background:rgba(0,176,200,.05);}
 
 .drag-handle{padding:0 6px 0 10px;display:flex;align-items:center;color:var(--line2);cursor:grab;font-size:13px;user-select:none;touch-action:none;flex-shrink:0;}
 .drag-handle:active{cursor:grabbing;}
@@ -147,8 +147,29 @@ textarea.fi{min-height:68px;}
 .empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;border:1.5px dashed var(--line);border-radius:8px;}
 
 /* FOOTER */
-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:200;}
-.footer-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;justify-content:flex-end;gap:8px;}
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none;z-index:200;}
+.footer-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.footer-right{display:flex;gap:8px;align-items:center;}
+
+/* FOOTER BUTTONS (Import / Export JSON) */
+.btn-footer{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+  padding:6px 14px;border-radius:6px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+  border:1.5px solid rgba(255,255,255,.6);
+  background:transparent;color:#fff;
+}
+.btn-footer:hover{background:rgba(255,255,255,.18);border-color:#fff;}
+.btn-footer:active{background:rgba(255,255,255,.35);border-color:#fff;transform:scale(.96);}
+
+/* WAKE LOCK */
+.btn-wake{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.btn-wake:hover{border-color:#fff;color:#fff;}
+.btn-wake:active{background:rgba(255,255,255,.2);transform:scale(.96);}
+.btn-wake.on{background:rgba(255,255,255,.2);border-color:#fff;color:#fff;}
+.btn-wake.off{opacity:.7;}
+.wake-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);flex-shrink:0;transition:background .2s;}
+.btn-wake.on .wake-dot{background:#fff;box-shadow:0 0 6px rgba(255,255,255,.8);}
 
 /* TOAST */
 #toast{position:fixed;bottom:64px;right:20px;z-index:9000;background:var(--ink2);color:#fff;font-size:12.5px;padding:9px 18px;border-radius:7px;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;box-shadow:0 4px 20px rgba(0,60,80,.2);}
@@ -198,9 +219,15 @@ footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.92);b
 
 <footer>
   <div class="footer-inner">
-    <button class="btn btn-grad-outline btn-sm" onclick="importTrigger()">Import</button>
-    <button class="btn btn-grad btn-sm" onclick="exportData()">Export JSON</button>
-    <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="btn-wake off" id="wake-btn" onclick="toggleWakeLock()">
+      <span class="wake-dot"></span>
+      <span id="wake-label">Screen Off</span>
+    </button>
+    <div class="footer-right">
+      <button class="btn-footer" onclick="importTrigger()">Import</button>
+      <button class="btn-footer" onclick="exportData()">Export JSON</button>
+      <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
   </div>
 </footer>
 
@@ -706,6 +733,68 @@ function importData(e){
   };
   r.readAsText(f);e.target.value='';
 }
+
+// ── SCREEN WAKE LOCK ──────────────────────────────────
+var wakeLock=null;
+var wakeTimer=null;
+var WAKE_MS=180*60*1000; // 180分
+
+async function toggleWakeLock(){
+  if(wakeLock){
+    releaseWakeLock();
+  } else {
+    await requestWakeLock();
+  }
+}
+
+async function requestWakeLock(){
+  if(!('wakeLock' in navigator)){toast('このブラウザはScreen Wake Lockに非対応です');return;}
+  try{
+    wakeLock=await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release',function(){
+      // fired when OS/browser releases it (e.g. tab hidden)
+      setWakeUI(false);
+      wakeLock=null;
+      clearTimeout(wakeTimer);
+    });
+    setWakeUI(true);
+    // auto-off after 180min
+    clearTimeout(wakeTimer);
+    wakeTimer=setTimeout(function(){releaseWakeLock();toast('Screen Wake Lock 180分経過 — 解除しました');},WAKE_MS);
+  }catch(e){
+    toast('Wake Lock取得に失敗しました: '+e.message);
+  }
+}
+
+function releaseWakeLock(){
+  if(wakeLock){wakeLock.release();wakeLock=null;}
+  clearTimeout(wakeTimer);
+  setWakeUI(false);
+}
+
+function setWakeUI(on){
+  var btn=document.getElementById('wake-btn');
+  var lbl=document.getElementById('wake-label');
+  if(!btn)return;
+  if(on){
+    btn.classList.add('on');btn.classList.remove('off');
+    lbl.textContent='Screen ON';
+  } else {
+    btn.classList.remove('on');btn.classList.add('off');
+    lbl.textContent='Screen Off';
+  }
+}
+
+// Windowsで他ウィンドウがアクティブになるとvisibilityがhiddenになりwakeLockが自動解除される
+// 戻ってきたら自動的にUIを更新
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&wakeLock===null){
+    var btn=document.getElementById('wake-btn');
+    if(btn&&btn.classList.contains('on')){
+      setWakeUI(false);
+    }
+  }
+});
 
 // ── INIT ──────────────────────────────────────────────
 renderTodos();renderLinks();renderMemos();
