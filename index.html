@@ -121,7 +121,7 @@ textarea.fi{min-height:68px;}
 /* CAT GROUP */
 .cat-group{margin-bottom:12px;}
 .cat-group-label{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-left:2px;}
-.cat-badge{flex-grow:1;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:500;background:var(--grad-soft);color:var(--cyan);border:1px solid rgba(0,176,200,.2);}
+.cat-badge{flex-grow:1;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;border:none;}
 /* ITEM CARD - flat, no shadow, no border */
 .item-card{background:#fff;border:none;border-radius:0;box-shadow:none;margin-bottom:2px;display:flex;align-items:stretch;position:relative;transition:background .15s;animation:rise .25s ease both;overflow:hidden;}
 .item-card:hover{background:#fafafa;}
@@ -184,6 +184,9 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 }
 .btn-footer:hover{background:rgba(255,255,255,.18);border-color:#fff;}
 .btn-footer:active{background:rgba(255,255,255,.35);border-color:#fff;transform:scale(.96);}
+.btn-footer.unsaved{background:rgba(255,255,255,.22);border-color:#fff;animation:unsaved-pulse 1.8s ease-in-out infinite;}
+.btn-footer.unsaved::after{content:'●';font-size:8px;vertical-align:super;margin-left:3px;color:#ffe066;}
+@keyframes unsaved-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,224,102,.5);}50%{box-shadow:0 0 0 5px rgba(255,224,102,0);}}
 
 /* WAKE LOCK */
 .btn-wake{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
@@ -336,7 +339,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     </button>
     <div class="footer-right">
       <button class="btn-footer" onclick="importTrigger()">Import</button>
-      <button class="btn-footer" onclick="exportData()">Export JSON</button>
+      <button class="btn-footer" id="export-btn" onclick="exportData()">Export JSON</button>
       <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
     </div>
   </div>
@@ -689,9 +692,9 @@ function addTodo(){
   if(!text){toast('タスクを入力してください');return;}
   todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false});
   S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';
-  renderTodos();toast('追加しました');
+  markUpdated();renderTodos();toast('追加しました');
 }
-function toggleTodo(id){const t=todos.find(x=>x.id===id);if(t){t.done=!t.done;S.set('mp_todos',todos);renderTodos();}}
+function toggleTodo(id){const t=todos.find(x=>x.id===id);if(t){t.done=!t.done;S.set('mp_todos',todos);markUpdated();renderTodos();}}
 function openTodoEdit(id){document.getElementById(`te-${id}`).classList.add('open');}
 function closeTodoEdit(id){document.getElementById(`te-${id}`).classList.remove('open');}
 function saveTodoEdit(id){
@@ -699,9 +702,9 @@ function saveTodoEdit(id){
   const v=document.getElementById(`tei-${id}`).value.trim();
   if(v)t.text=v;
   t.cat=document.getElementById(`tec-${id}`).value.trim();
-  S.set('mp_todos',todos);renderTodos();toast('更新しました');
+  S.set('mp_todos',todos);markUpdated();renderTodos();toast('更新しました');
 }
-function delTodo(id){confirmDel(()=>{todos=todos.filter(x=>x.id!==id);S.set('mp_todos',todos);renderTodos();toast('削除しました');});}
+function delTodo(id){confirmDel(()=>{todos=todos.filter(x=>x.id!==id);S.set('mp_todos',todos);markUpdated();renderTodos();toast('削除しました');});}
 
 // ── LINKS ──────────────────────────────────────────────
 function renderLinks(){
@@ -781,7 +784,7 @@ function addLink(){
   if(!u){toast('URLを入力してください');return;}
   links.push({id:uid(),name:document.getElementById('ln').value.trim()||u,url:u,cat:document.getElementById('lc').value.trim(),status:''});
   S.set('mp_links',links);document.getElementById('ln').value='';document.getElementById('lu').value='';document.getElementById('lc').value='';
-  renderLinks();toast('追加しました');
+  markUpdated();renderLinks();toast('追加しました');
 }
 function openLinkEdit(id){document.getElementById(`le-${id}`).classList.add('open');}
 function closeLinkEdit(id){document.getElementById(`le-${id}`).classList.remove('open');}
@@ -790,9 +793,9 @@ function saveLinkEdit(id){
   const n=document.getElementById(`lei-${id}`).value.trim();const u=document.getElementById(`leu-${id}`).value.trim();
   if(n)lk.name=n;if(u)lk.url=u;
   lk.cat=document.getElementById(`lec-${id}`).value.trim();
-  S.set('mp_links',links);renderLinks();toast('更新しました');
+  S.set('mp_links',links);markUpdated();renderLinks();toast('更新しました');
 }
-function delLink(id){confirmDel(()=>{links=links.filter(x=>x.id!==id);S.set('mp_links',links);renderLinks();toast('削除しました');});}
+function delLink(id){confirmDel(()=>{links=links.filter(x=>x.id!==id);S.set('mp_links',links);markUpdated();renderLinks();toast('削除しました');});}
 async function checkLink(id){
   const lk=links.find(x=>x.id===id);if(!lk)return;
   lk.status='chk';renderLinks();
@@ -870,7 +873,7 @@ function addMemo(){
   if(!text){toast('メモを入力してください');return;}
   memos.push({id:uid(),text,cat:document.getElementById('mc').value.trim(),ts:nowStr()});
   S.set('mp_memos',memos);document.getElementById('mi').value='';document.getElementById('mc').value='';
-  renderMemos();toast('保存しました');
+  markUpdated();renderMemos();toast('保存しました');
 }
 function openMemoEdit(id){document.getElementById(`me-${id}`).classList.add('open');}
 function closeMemoEdit(id){document.getElementById(`me-${id}`).classList.remove('open');}
@@ -878,14 +881,35 @@ function saveMemoEdit(id){
   const m=memos.find(x=>x.id===id);if(!m)return;
   const v=document.getElementById(`mei-${id}`).value.trim();if(v)m.text=v;
   m.cat=document.getElementById(`mec-${id}`).value.trim();
-  S.set('mp_memos',memos);renderMemos();toast('更新しました');
+  S.set('mp_memos',memos);markUpdated();renderMemos();toast('更新しました');
 }
-function delMemo(id){confirmDel(()=>{memos=memos.filter(x=>x.id!==id);S.set('mp_memos',memos);renderMemos();toast('削除しました');});}
+function delMemo(id){confirmDel(()=>{memos=memos.filter(x=>x.id!==id);S.set('mp_memos',memos);markUpdated();renderMemos();toast('削除しました');});}
 
 // ── EXPORT / IMPORT ───────────────────────────────────
+function markUpdated(){
+  localStorage.setItem('mp_last_updated', Date.now());
+  checkUnsaved();
+}
+function checkUnsaved(){
+  const updated = parseInt(localStorage.getItem('mp_last_updated')||'0');
+  const exported = parseInt(localStorage.getItem('mp_last_exported')||'0');
+  const btn = document.getElementById('export-btn');
+  if(!btn) return;
+  if(updated > exported && updated > 0){
+    btn.classList.add('unsaved');
+    btn.title = '未エクスポートの変更があります';
+  } else {
+    btn.classList.remove('unsaved');
+    btn.title = '';
+  }
+}
+
 function exportData(){
   const blob=new Blob([JSON.stringify({todos,links,memos,exported:new Date().toISOString()},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`portal_${new Date().toISOString().slice(0,10)}.json`;a.click();toast('エクスポート完了');
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`portal_${new Date().toISOString().slice(0,10)}.json`;a.click();
+  localStorage.setItem('mp_last_exported', Date.now());
+  checkUnsaved();
+  toast('エクスポート完了');
 }
 function importTrigger(){document.getElementById('imp-file').click();}
 function importData(e){
@@ -896,7 +920,7 @@ function importData(e){
       if(d.todos){todos=d.todos;S.set('mp_todos',todos);}
       if(d.links){links=d.links;S.set('mp_links',links);}
       if(d.memos){memos=d.memos;S.set('mp_memos',memos);}
-      renderTodos();renderLinks();renderMemos();toast('インポート完了');
+      markUpdated();renderTodos();renderLinks();renderMemos();toast('インポート完了');
     }catch{toast('エラー：ファイルが無効です');}
   };
   r.readAsText(f);e.target.value='';
@@ -1006,7 +1030,7 @@ window.addEventListener('scroll',updateNavs,{passive:true});
 setTimeout(updateNavs,300);
 
 // ── INIT ──────────────────────────────────────────────
-renderTodos();renderLinks();renderMemos();
+renderTodos();renderLinks();renderMemos();checkUnsaved();
 </script>
 </body>
 </html>
