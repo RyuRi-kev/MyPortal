@@ -121,7 +121,8 @@ textarea.fi{min-height:68px;}
 /* CAT GROUP */
 .cat-group{margin-bottom:12px;}
 .cat-group-label{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-left:2px;}
-.cat-badge{flex-grow:1;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:700;background:var(--grad-soft);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;border:none;}
+.cat-badge{flex-grow:1;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:500;background:var(--grad-soft);border:none;position:relative;color:transparent;}
+.cat-badge::after{content:attr(data-text);position:absolute;inset:0;display:flex;align-items:center;padding:2px 9px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 /* ITEM CARD - flat, no shadow, no border */
 .item-card{background:#fff;border:none;border-radius:0;box-shadow:none;margin-bottom:2px;display:flex;align-items:stretch;position:relative;transition:background .15s;animation:rise .25s ease both;overflow:hidden;}
 .item-card:hover{background:#fafafa;}
@@ -651,7 +652,7 @@ ${catTabsHTML('todo',cats,F.todo)}
   orderedKeys.forEach(function(cat){
     var items=grouped[cat];if(!items)return;
     const g=document.createElement('div');g.className='cat-group';
-    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge">'+esc(cat)+'</span></div>';
+    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge"><span class="cat-badge-text">'+esc(cat)+'</span></span></div>';
     items.forEach(t=>{
       const card=document.createElement('div');card.className='item-card'+(t.done?' done':'');card.dataset.id=t.id;
       card.innerHTML=`
@@ -741,7 +742,7 @@ ${catTabsHTML('link',cats,F.link)}
   orderedKeys.forEach(function(cat){
     var items=grouped[cat];if(!items)return;
     const g=document.createElement('div');g.className='cat-group';
-    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge">'+esc(cat)+'</span></div>';
+    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge"><span class="cat-badge-text">'+esc(cat)+'</span></span></div>';
     items.forEach(lk=>{
       const sc=lk.status==='ok'?'ls-ok':lk.status==='ng'?'ls-ng':lk.status==='chk'?'ls-chk':'';
       const card=document.createElement('div');card.className='item-card';card.dataset.id=lk.id;
@@ -836,7 +837,7 @@ ${catTabsHTML('memo',cats,F.memo)}
   orderedKeys.forEach(function(cat){
     var items=grouped[cat];if(!items)return;
     const g=document.createElement('div');g.className='cat-group';
-    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge">'+esc(cat)+'</span></div>';
+    if(cat)g.innerHTML='<div class="cat-group-label"><span class="cat-badge"><span class="cat-badge-text">'+esc(cat)+'</span></span></div>';
     items.forEach(m=>{
       const card=document.createElement('div');card.className='item-card';card.dataset.id=m.id;
       card.innerHTML=`
