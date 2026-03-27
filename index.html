@@ -1033,13 +1033,18 @@ function updateNavs(){
   var scrollY=window.scrollY||window.pageYOffset;
   var current='';
 
+  var headerEl=document.querySelector('header');
+  var miniNavEl=document.getElementById('mini-nav');
+  var navH=(headerEl?headerEl.getBoundingClientRect().height:52)+(miniNavEl?miniNavEl.getBoundingClientRect().height:38);
+
   sections.forEach(function(sid){
     var el=document.getElementById(sid);
     if(el){
-      var top=el.getBoundingClientRect().top+scrollY-100;
+      var top=el.getBoundingClientRect().top+scrollY-navH;
       if(scrollY>=top)current=sid;
     }
   });
+
 
   // mini nav: show after scrolling past header (~60px), update active
   var miniNav=document.getElementById('mini-nav');
