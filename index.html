@@ -214,9 +214,8 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 
 /* TOP MINI NAV */
 #mini-nav{
-  /* position:fixed;top:52px;left:0;right:0;z-index:190; */
   position:fixed;top:calc(52px + env(safe-area-inset-top));left:0;right:0;z-index:190;
-  background:rgba(255,255,255,.95);backdrop-filter:blur(10px);
+  background:#fff;
   border-bottom:1px solid var(--line);
   transform:translateY(-100%);opacity:0;
   transition:transform .25s ease,opacity .25s ease;
@@ -306,7 +305,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver2.0</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver2.1</span>
   </div>
 </div>
 <header>
@@ -1018,10 +1017,14 @@ document.addEventListener('visibilitychange',function(){
 function jumpTo(id){
   var el=document.getElementById(id);
   if(!el)return;
-  // header(52px) + mini-nav(38px) + 余白8px = 98px オフセットでセクションタイトルがちょうど見える位置に止める
-  var offset=98;
-  var top=el.getBoundingClientRect().top+(window.scrollY||window.pageYOffset)-offset;
-  window.scrollTo({top:top,behavior:'smooth'});
+// ヘッダー実高さ(safe-area込み)をDOMから取得してオフセット計算
+var headerEl=document.querySelector('header');
+var miniNavEl=document.getElementById('mini-nav');
+var headerH=headerEl?headerEl.getBoundingClientRect().height:52;
+var miniNavH=miniNavEl?miniNavEl.getBoundingClientRect().height:38;
+var offset=headerH+miniNavH+8;
+var top=el.getBoundingClientRect().top+(window.scrollY||window.pageYOffset)-offset;
+window.scrollTo({top:top,behavior:'smooth'});
 }
 
 function updateNavs(){
