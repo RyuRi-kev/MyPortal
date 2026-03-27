@@ -85,11 +85,12 @@ textarea.fi{min-height:68px;}
 /* inline text action buttons (edit / delete) */
 .btn-action{
   background:none;border:1px solid var(--line);
-  border-radius:4px;cursor:pointer;
-  font-family:'Inter',sans-serif;font-size:10.5px;font-weight:500;
-  color:var(--ink2);padding:2px 7px;
-  transition:all .18s;line-height:1.4;white-space:nowrap;
+  border-radius:6px;cursor:pointer;
+  color:var(--ink2);padding:4px 6px;
+  transition:all .18s;line-height:1;white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;
 }
+.btn-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .btn-action:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,176,200,.05);}
 .btn-action.del:hover{border-color:#e05050;color:#e05050;background:rgba(224,80,80,.05);}
 
@@ -187,7 +188,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 .btn-footer:active{background:rgba(255,255,255,.35);border-color:#fff;transform:scale(.96);}
 .btn-footer.unsaved{background:rgba(255,255,255,.22);border-color:#fff;animation:unsaved-pulse 1.8s ease-in-out infinite;}
 .btn-footer.unsaved::after{content:none;}
-@keyframes unsaved-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,224,102,.8),0 0 0 0 rgba(255,224,102,.4);}35%{box-shadow:0 0 0 7px rgba(255,224,102,.15),0 0 0 14px rgba(255,224,102,0);}50%{box-shadow:0 0 0 9px rgba(255,224,102,0),0 0 0 18px rgba(255,224,102,0);}}
+@keyframes unsaved-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.9),0 0 0 0 rgba(255,255,255,.5);}35%{box-shadow:0 0 0 7px rgba(255,255,255,.2),0 0 0 14px rgba(255,255,255,0);}50%{box-shadow:0 0 0 9px rgba(255,255,255,0),0 0 0 18px rgba(255,255,255,0);}}
 
 /* WAKE LOCK */
 .btn-wake{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
@@ -672,8 +673,8 @@ ${catTabsHTML('todo',cats,F.todo)}
       </div>
     </div>
     <div class="item-actions">
-      <button class="btn-action" onclick="openTodoEdit('${t.id}')">edit</button>
-      <button class="btn-action del" onclick="delTodo('${t.id}')">delete</button>
+      <button class="btn-action" title="編集" onclick="openTodoEdit('${t.id}')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-action del" title="削除" onclick="delTodo('${t.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
     </div>
   </div>
   <div class="edit-form" id="te-${t.id}">
@@ -762,9 +763,9 @@ ${catTabsHTML('link',cats,F.link)}
       <span class="link-url">${esc(lk.url)}</span>
     </div>
     <div class="item-actions">
-      <button class="btn-action" onclick="checkLink('${lk.id}')">check</button>
-      <button class="btn-action" onclick="openLinkEdit('${lk.id}')">edit</button>
-      <button class="btn-action del" onclick="delLink('${lk.id}')">delete</button>
+      <button class="btn-action" title="診断" onclick="checkLink('${lk.id}')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="8 12 10 10 12 14 14 10 16 12"/></svg></button>
+      <button class="btn-action" title="編集" onclick="openLinkEdit('${lk.id}')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-action del" title="削除" onclick="delLink('${lk.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
     </div>
   </div>
   <div class="edit-form" id="le-${lk.id}">
@@ -855,8 +856,8 @@ ${catTabsHTML('memo',cats,F.memo)}
       <div class="memo-ts">${esc(m.ts)}</div>
     </div>
     <div class="item-actions">
-      <button class="btn-action" onclick="openMemoEdit('${m.id}')">edit</button>
-      <button class="btn-action del" onclick="delMemo('${m.id}')">delete</button>
+      <button class="btn-action" title="編集" onclick="openMemoEdit('${m.id}')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-action del" title="削除" onclick="delMemo('${m.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
     </div>
   </div>
   <div class="edit-form" id="me-${m.id}">
