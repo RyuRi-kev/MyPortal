@@ -175,7 +175,7 @@ textarea.fi{min-height:68px;}
 footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none;z-index:200;padding-bottom:env(safe-area-inset-bottom);}
 .footer-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
 .footer-right{display:flex;gap:8px;align-items:center;}
-.footer-ver{font-size:5px;color:#fff;align-items:flex-end;}
+.footer-ver{display:flex;align-items:flex-end;font-size:10px;color:#fff;}
 
 /* FOOTER BUTTONS (Import / Export JSON) */
 .btn-footer{
@@ -350,7 +350,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
       <button class="btn-footer" onclick="importTrigger()">             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px"><polyline points="8,11 12,15 16,11"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M4,11 L4,19 Q4,20 5,20 L19,20 Q20,20 20,19 L20,11"/></svg>import</button>
       <button class="btn-footer" id="export-btn" onclick="exportData()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px"><polyline points="8,7 12,3 16,7"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M4,14 L4,19 Q4,20 5,20 L19,20 Q20,20 20,19 L20,14"/></svg>export</button>
       <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
-      <span class="footer-ver">ver1.3</span>
+      <span class="footer-ver">ver1.4</span>
     </div>
   </div>
 </footer>
