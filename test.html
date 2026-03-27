@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Polygon Design: Custom Cyan & Magenta</title>
+    <style>
+        :root {
+            /* 指定のカラーコード */
+            --magenta: #d6008f;
+            --cyan: #00b0c8;
+            --bg-color: #ffffff;
+            --card-bg: #fdfdfd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ececec;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #444;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .svg-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05));
+        }
+
+        .color-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .swatch-c { color: var(--cyan); }
+        .swatch-m { color: var(--magenta); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="color-info">
+        <span class="swatch-c">■ Cyan: #00b0c8</span>
+        <span class="swatch-m">■ Magenta: #d6008f</span>
+    </div>
+
+    <div class="card">
+        <h2>Modern Abstract Layer</h2>
+        <div class="svg-wrapper">
+            <svg width="600" height="300" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="100,150 250,50 400,150 250,250" fill="var(--cyan)" opacity="0.8" />
+                <polygon points="200,150 350,50 500,150 350,250" fill="var(--magenta)" opacity="0.8" />
+                <polygon points="250,150 350,83 400,150 350,217" fill="white" opacity="0.2" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Geometric Branding Concept</h2>
+        <div class="svg-wrapper">
+            <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="150,50 250,50 200,150" fill="var(--magenta)" />
+                <polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.7" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Low-Poly Digital Wave</h2>
+        <div class="svg-wrapper">
+            <svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="0,200 100,50 200,150 300,20 400,120 500,60 600,200" fill="var(--cyan)" opacity="0.3" />
+                <polygon points="0,200 150,100 250,180 350,80 450,150 550,40 600,200" fill="var(--magenta)" opacity="0.3" />
+                <polyline points="0,200 100,50 200,150 300,20 400,120 500,60 600,200" fill="none" stroke="var(--cyan)" stroke-width="2" />
+                <polyline points="0,200 150,100 250,180 350,80 450,150 550,40 600,200" fill="none" stroke="var(--magenta)" stroke-width="2" />
+            </svg>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
