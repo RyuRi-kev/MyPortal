@@ -214,7 +214,8 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 
 /* TOP MINI NAV */
 #mini-nav{
-  position:fixed;top:52px;left:0;right:0;z-index:190;
+  /* position:fixed;top:52px;left:0;right:0;z-index:190; */
+  position:fixed;top:calc(52px + env(safe-area-inset-top));left:0;right:0;z-index:190;
   background:rgba(255,255,255,.95);backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
   transform:translateY(-100%);opacity:0;
