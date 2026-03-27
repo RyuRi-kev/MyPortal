@@ -527,13 +527,29 @@ function setupDrag(containerId,arr,key,renderFn){
         if(clientY<cr.top+cr.height*.5){before=c;break;}
       }
       try{
+        // FLIP: 移動前の座標を記録
+        const rectBefore=ghost.getBoundingClientRect();
+        let moved=false;
         if(before){
-          before.parentNode.insertBefore(ghost,before);
+          if(ghost.nextSibling!==before||ghost.parentNode!==before.parentNode){
+            before.parentNode.insertBefore(ghost,before);moved=true;
+          }
         }else{
-          // 末尾：最後のカードの親の末尾に挿入
           const lastCard=others[others.length-1];
           const target=lastCard?lastCard.parentNode:container;
-          target.appendChild(ghost);
+          if(ghost.parentNode!==target||ghost.nextSibling!==null){
+            target.appendChild(ghost);moved=true;
+          }
+        }
+        if(moved){
+          // FLIP: 移動後の座標との差分を transform で打ち消し→transitionで戻す
+          const rectAfter=ghost.getBoundingClientRect();
+          const dy=rectBefore.top-rectAfter.top;
+          ghost.style.transition='none';
+          ghost.style.transform=`translateY(${dy}px)`;
+          ghost.getBoundingClientRect(); // reflow
+          ghost.style.transition='transform 0.18s cubic-bezier(.4,0,.2,1)';
+          ghost.style.transform='translateY(0)';
         }
       }catch(e){}
     }
