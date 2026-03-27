@@ -191,7 +191,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 @keyframes unsaved-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.9),0 0 0 0 rgba(255,255,255,.5);}35%{box-shadow:0 0 0 7px rgba(255,255,255,.2),0 0 0 14px rgba(255,255,255,0);}50%{box-shadow:0 0 0 9px rgba(255,255,255,0),0 0 0 18px rgba(255,255,255,0);}}
 
 /* WAKE LOCK */
-.btn-wake{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.btn-wake{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:6px 12px;border-radius:5px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
 .btn-wake:hover{border-color:#fff;color:#fff;}
 .btn-wake:active{background:rgba(255,255,255,.2);transform:scale(.96);}
 .btn-wake.on{background:rgba(255,255,255,.2);border-color:#fff;color:#fff;}
@@ -263,7 +263,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 
 /* RESPONSIVE */
 @media(max-width:600px){
-  .header-inner,.footer-inner{padding-left:16px;padding-right:16px;}
+  .header-inner,.footer-inner{padding-left:16px;padding-right:16px;position:relative;}
   main{padding:16px 16px 80px;}
   #hclock{display:none;}
   .form-row{flex-direction:column;}
@@ -350,6 +350,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
       <button class="btn-footer" id="export-btn" onclick="exportData()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px"><polyline points="8,7 12,3 16,7"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M4,14 L4,19 Q4,20 5,20 L19,20 Q20,20 20,19 L20,14"/></svg>export</button>
       <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
     </div>
+    <span class="footer-ver">ver1.0</span>
   </div>
 </footer>
 
