@@ -173,7 +173,7 @@ textarea.fi{min-height:68px;}
 
 /* FOOTER */
 footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none;z-index:200;padding-bottom:env(safe-area-inset-bottom);}
-.footer-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.footer-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px;position:relative;}
 .footer-right{display:flex;gap:8px;align-items:center;}
 
 /* FOOTER BUTTONS (Import / Export JSON) */
@@ -263,7 +263,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 
 /* RESPONSIVE */
 @media(max-width:600px){
-  .header-inner,.footer-inner{padding-left:16px;padding-right:16px;position:relative;}
+  .header-inner,.footer-inner{padding-left:16px;padding-right:16px;}
   main{padding:16px 16px 80px;}
   #hclock{display:none;}
   .form-row{flex-direction:column;}
@@ -350,7 +350,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
       <button class="btn-footer" id="export-btn" onclick="exportData()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px"><polyline points="8,7 12,3 16,7"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M4,14 L4,19 Q4,20 5,20 L19,20 Q20,20 20,19 L20,14"/></svg>export</button>
       <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
     </div>
-    <span class="footer-ver">ver1.0</span>
+    <span class="footer-ver">ver1.1</span>
   </div>
 </footer>
 
