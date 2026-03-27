@@ -240,24 +240,6 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 .mnav-btn.active::after{opacity:1;}
 .mnav-btn:hover{color:var(--ink);}
 
-/* FLOATING NAV */
-#float-nav{position:fixed;right:16px;bottom:80px;z-index:300;display:flex;flex-direction:column;gap:6px;}
-.fnav-btn{
-  display:flex;align-items:center;gap:7px;
-  padding:6px 12px 6px 10px;border-radius:20px;
-  background:var(--grad);color:#fff;
-  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;
-  border:none;cursor:pointer;
-  box-shadow:0 2px 12px rgba(0,60,80,.15);
-  opacity:.4;transition:opacity .2s,transform .15s,box-shadow .2s;
-  white-space:nowrap;
-}
-.fnav-btn:hover{opacity:1;box-shadow:0 4px 20px rgba(0,60,80,.2);}
-.fnav-btn.active{opacity:1;box-shadow:0 4px 20px rgba(0,60,80,.22);}
-.fnav-btn:active{transform:scale(.93);}
-.fnav-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);flex-shrink:0;transition:background .2s;}
-.fnav-btn.active .fnav-dot{background:#fff;box-shadow:0 0 5px rgba(255,255,255,.8);}
-
 /* ANIMATIONS */
 @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
@@ -324,7 +306,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver1.9</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver2.0</span>
   </div>
 </div>
 <header>
@@ -365,12 +347,6 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
       <button class="btn btn-sm" id="del-ok" style="background:#c0392b;color:#fff;border:none;">削除する</button>
     </div>
   </div>
-</div>
-
-<div id="float-nav">
-  <button class="fnav-btn" id="fn-todo" onclick="jumpTo('sec-todo')"><span class="fnav-dot"></span>TODO</button>
-  <button class="fnav-btn" id="fn-links" onclick="jumpTo('sec-links')"><span class="fnav-dot"></span>LINKS</button>
-  <button class="fnav-btn" id="fn-memo" onclick="jumpTo('sec-memo')"><span class="fnav-dot"></span>MEMO</button>
 </div>
 
 <div id="toast"></div>
@@ -1041,12 +1017,15 @@ document.addEventListener('visibilitychange',function(){
 // ── FLOATING NAV + MINI NAV ────────────────────────────
 function jumpTo(id){
   var el=document.getElementById(id);
-  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  if(!el)return;
+  // header(52px) + mini-nav(38px) + 余白8px = 98px オフセットでセクションタイトルがちょうど見える位置に止める
+  var offset=98;
+  var top=el.getBoundingClientRect().top+(window.scrollY||window.pageYOffset)-offset;
+  window.scrollTo({top:top,behavior:'smooth'});
 }
 
 function updateNavs(){
   var sections=['sec-todo','sec-links','sec-memo'];
-  var floatIds=['fn-todo','fn-links','fn-memo'];
   var miniIds=['mn-todo','mn-links','mn-memo'];
   var scrollY=window.scrollY||window.pageYOffset;
   var current='';
@@ -1057,12 +1036,6 @@ function updateNavs(){
       var top=el.getBoundingClientRect().top+scrollY-100;
       if(scrollY>=top)current=sid;
     }
-  });
-
-  // floating nav active state
-  floatIds.forEach(function(fid,i){
-    var btn=document.getElementById(fid);
-    if(btn)btn.classList.toggle('active',current===sections[i]);
   });
 
   // mini nav: show after scrolling past header (~60px), update active
