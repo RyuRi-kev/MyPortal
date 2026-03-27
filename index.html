@@ -538,17 +538,35 @@ function setupDrag(containerId,arr,key,renderFn){
       active=false;
       if(clone){clone.remove();clone=null;}
       card.style.opacity='';
-      // determine new index from ghost position
-      const siblings=[...container.children].filter(el=>el!==card);
-      const newIdx=siblings.indexOf(ghost);
-      if(ghost)ghost.remove();
+      // determine new index from ghost position among all cards
+      const allC=allCards();
+      // find which card the ghost is before (in DOM order among cards+ghost)
+      let insertBeforeId=null;
+      if(ghost){
+        const ghostParent=ghost.parentNode;
+        if(ghostParent){
+          // walk siblings after ghost to find next card
+          let sib=ghost.nextSibling;
+          while(sib){
+            if(sib.classList&&sib.classList.contains('item-card')&&sib.dataset.id){
+              insertBeforeId=sib.dataset.id;break;
+            }
+            sib=sib.nextSibling;
+          }
+        }
+        ghost.remove();
+      }
       ghost=null;
       // reorder array
       const fromIdx=arr.findIndex(x=>x.id===card.dataset.id);
       if(fromIdx<0)return;
       const [item]=arr.splice(fromIdx,1);
-      const insertAt=newIdx<0?arr.length:Math.min(newIdx,arr.length);
-      arr.splice(insertAt,0,item);
+      if(insertBeforeId){
+        const toIdx=arr.findIndex(x=>x.id===insertBeforeId);
+        arr.splice(toIdx<0?arr.length:toIdx,0,item);
+      }else{
+        arr.push(item);
+      }
       S.set(key,arr);renderFn();
     }
 
