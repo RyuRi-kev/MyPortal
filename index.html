@@ -518,9 +518,8 @@ function setupDrag(containerId,arr,key,renderFn){
 
     function move(clientY){
       if(!active||!clone)return;
-      const dy=clientY-startY;
       const r=card.getBoundingClientRect();
-      clone.style.top=(r.top+dy)+'px';
+      clone.style.top=(clientY-(startY-r.top))+'px';
       const others=allCards().filter(c=>c!==card);
       let before=null;
       for(const c of others){
@@ -528,8 +527,14 @@ function setupDrag(containerId,arr,key,renderFn){
         if(clientY<cr.top+cr.height*.5){before=c;break;}
       }
       try{
-        if(before&&container.contains(before)) container.insertBefore(ghost,before);
-        else container.appendChild(ghost);
+        if(before){
+          before.parentNode.insertBefore(ghost,before);
+        }else{
+          // 末尾：最後のカードの親の末尾に挿入
+          const lastCard=others[others.length-1];
+          const target=lastCard?lastCard.parentNode:container;
+          target.appendChild(ghost);
+        }
       }catch(e){}
     }
 
