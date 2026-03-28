@@ -49,6 +49,7 @@ header{background:var(--grad);border:none;position:sticky;top:0;z-index:200;padd
 /* MAIN */
 main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 .section{margin-bottom:112px;background:#fff;}
+#sec-calendar{margin-bottom:0;}
 .section-header{display:flex;align-items:flex-end;gap:12px;margin-bottom:14px;padding-top:8px;}
 .section-title{font-family:'Inter',sans-serif;font-size:50px;font-weight:1000;/*letter-spacing:.03em;*/text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .section-line{display:flex;align-items:center;margin-left:4px;}
@@ -266,7 +267,8 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .cal-nav-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px 10px;border-radius:6px;color:var(--ink2);transition:background .15s,color .15s;}
 .cal-nav-btn:hover{background:rgba(0,176,200,.08);color:var(--cyan);}
-.cal-months{display:flex;gap:16px;flex-wrap:nowrap;}
+.cal-months{display:flex;gap:24px;flex-wrap:nowrap;}
+.cal-month{flex:1;min-width:0;max-width:calc(50% - 12px);}
 @media(max-width:600px){.cal-months{flex-direction:column;gap:12px;}}
 .cal-month{flex:1;min-width:0;}
 .cal-month-title{text-align:center;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;margin-bottom:8px;background:linear-gradient(135deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
