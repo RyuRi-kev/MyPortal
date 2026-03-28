@@ -1101,7 +1101,9 @@ setTimeout(updateNavs,300);
       +'<div class="cal-header">'
       +'<button class="cal-nav-btn" onclick="calMove(-1)">&#8249;</button>'
       +'<div style="font-family:\'Inter\',sans-serif;font-size:12px;color:var(--muted);">'
-      +months[0].y+'年 '+(months[0].m+1)+'月〜'+(months[1].m+1)+'月'
+      +months[0].y+'.'+String(months[0].m+1).padStart(2,'0')
+      +'〜'
+      +months[1].y+'.'+String(months[1].m+1).padStart(2,'0')
       +'</div>'
       +'<button class="cal-nav-btn" onclick="calMove(1)">&#8250;</button>'
       +'</div>'
@@ -1109,12 +1111,13 @@ setTimeout(updateNavs,300);
 
     months.forEach(function(mv){
       html+='<div class="cal-month">';
-      html+='<div class="cal-month-title">'+mv.y+'年 '+(mv.m+1)+'月</div>';
+      var mm=String(mv.m+1).padStart(2,'0');
+      html+='<div class="cal-month-title">'+mv.y+'.'+mm+'</div>';
       html+='<div class="cal-grid">';
       DOWS.forEach(function(d){html+='<div class="cal-dow">'+d+'</div>';});
       var firstDay=new Date(mv.y,mv.m,1).getDay();
       var daysInMonth=new Date(mv.y,mv.m+1,0).getDate();
-      for(var k=0;k<firstDay;k++)html+='<div class="cal-day empty"></div>';
+      for(var k=0;k<firstDay;k++)html+='<div class="cal-day"></div>';
       for(var d=1;d<=daysInMonth;d++){
         var isToday=(mv.y===todayY&&mv.m===todayM&&d===todayD);
         html+='<div class="cal-day'+(isToday?' today':'')+'">'+d+'</div>';
