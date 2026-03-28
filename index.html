@@ -268,9 +268,9 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 .cal-nav-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px 10px;border-radius:6px;color:var(--ink2);transition:background .15s,color .15s;}
 .cal-nav-btn:hover{background:rgba(0,176,200,.08);color:var(--cyan);}
 .cal-months{display:flex;gap:24px;flex-wrap:nowrap;}
-.cal-months{display:flex;gap:32px;flex-wrap:nowrap;justify-content:center;}
+.cal-months{display:flex;gap:40px;flex-wrap:nowrap;justify-content:center;}
 @media(max-width:600px){.cal-months{flex-direction:column;gap:12px;align-items:center;}}
-.cal-month{flex:0 1 46%;min-width:0;}
+.cal-month{flex:0 1 40%;min-width:0;}
 @media(max-width:600px){.cal-month{width:92%;flex:none;}}
 .cal-month-title{text-align:center;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;margin-bottom:8px;background:linear-gradient(135deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
@@ -324,7 +324,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver2.6</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver2.7</span>
   </div>
 </div>
 <header>
