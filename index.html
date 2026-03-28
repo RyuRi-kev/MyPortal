@@ -280,6 +280,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 .cal-dow{text-align:center;font-family:'Inter',sans-serif;font-size:10px;font-weight:500;padding:3px 0;background:linear-gradient(135deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .cal-day{text-align:center;font-family:'Inter',sans-serif;font-size:12px;padding:4px 0;border-radius:4px;color:var(--ink);line-height:1.4;}
 .cal-day.empty{color:transparent;}
+.cal-day.sun,.cal-day.sat{color:var(--muted);}
 .cal-day.today{border:none;border-radius:6px;position:relative;background:transparent;font-weight:700;isolation:isolate;color:#fff !important;-webkit-text-fill-color:#fff !important;}
 .cal-day.today::after{content:'';position:absolute;inset:-1.5px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--magenta));z-index:-1;}
 
@@ -327,7 +328,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.4</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.5</span>
   </div>
 </div>
 <header>
@@ -1139,7 +1140,9 @@ setTimeout(updateNavs,300);
       for(var k=0;k<firstDay;k++)html+='<div class="cal-day"></div>';
       for(var d=1;d<=daysInMonth;d++){
         var isToday=(mv.y===todayY&&mv.m===todayM&&d===todayD);
-        html+='<div class="cal-day'+(isToday?' today':'')+'">'+d+'</div>';
+        var dow=(firstDay+d-1)%7;
+        var wkCls=dow===0?' sun':dow===6?' sat':'';
+        html+='<div class="cal-day'+(isToday?' today':wkCls)+'">'+d+'</div>';
       }
       html+='</div></div>';
     });
