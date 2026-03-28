@@ -54,7 +54,6 @@ main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 .section-title{font-family:'Inter',sans-serif;font-size:50px;font-weight:1000;/*letter-spacing:.03em;*/text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .section-line{display:flex;align-items:center;margin-left:4px;}
 .section-line svg{width:44px;height:44px;display:block;}
-.section-count{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);}
 .btn-add-form{background:none;border:none;cursor:pointer;padding:2px 4px;margin-left:auto;line-height:1;color:var(--cyan);font-size:22px;font-weight:300;transition:transform .15s;}
 
 /* ADD FORM - shadow only, no border */
@@ -327,7 +326,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.1</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.2</span>
   </div>
 </div>
 <header>
@@ -675,8 +674,7 @@ function renderTodos(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Todo</span>
-<span class="section-line">...</span>
-  <span class="section-count">残り ${todos.filter(t=>!t.done).length} 件</span>
+  <span class="section-line">...</span>
   <button class="btn-add-form" id="btn-add-todo" onclick="toggleAddForm('todo')" title="追加">＋</button>
 </div>
 <div class="add-form" id="add-form-todo">
@@ -779,7 +777,6 @@ function renderLinks(){
 <div class="section-header">
   <span class="section-title">Links</span>
   <span class="section-line">...</span>
-  <span class="section-count">${links.length} 件</span>
   <button class="btn-add-form" id="btn-add-link" onclick="toggleAddForm('link')" title="追加">＋</button>
 </div>
 <div class="add-form" id="add-form-link">
@@ -880,7 +877,6 @@ function renderMemos(){
 <div class="section-header">
   <span class="section-title">Memo</span>
   <span class="section-line">...</span>
-  <span class="section-count">${memos.length} 件</span>
   <button class="btn-add-form" id="btn-add-memo" onclick="toggleAddForm('memo')" title="追加">＋</button>
 </div>
 <div class="add-form" id="add-form-memo">
