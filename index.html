@@ -54,14 +54,16 @@ main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 .section-title{font-family:'Inter',sans-serif;font-size:50px;font-weight:1000;/*letter-spacing:.03em;*/text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .section-line{display:flex;align-items:center;margin-left:4px;}
 .section-line svg{width:44px;height:44px;display:block;}
-.btn-add-form{background:none;border:none;cursor:pointer;padding:2px 4px;margin-left:auto;line-height:1;color:var(--cyan);font-size:22px;font-weight:300;transition:transform .15s;}
 
 /* ADD FORM - shadow only, no border */
 .add-form{background:#fff;border:none;border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh);display:none;}
 .add-form.open{display:block;}
 .btn-add-form{background:none;border:none;cursor:pointer;padding:2px 4px;margin-left:auto;line-height:1;color:var(--cyan);font-size:22px;font-weight:300;transition:transform .15s;}
 .btn-add-form.open{transform:rotate(45deg);color:var(--magenta);}
+.form-row{display:flex;gap:10px;margin-bottom:12px;}
 .form-row:last-child{margin-bottom:0;}
+.add-form .form-row{flex-direction:column;}
+.add-form .form-row .btn{width:100%;margin-top:2px;}
 .fi{flex:1;min-width:100px;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:6px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13.5px;color:var(--ink);outline:none;transition:border-color .18s,background .18s;resize:vertical;}
 .fi:focus{background:#fff;border-color:var(--cyan);}
 ::placeholder{color:var(--muted);}
@@ -325,7 +327,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.3</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.4</span>
   </div>
 </div>
 <header>
