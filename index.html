@@ -59,9 +59,8 @@ main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 /* ADD FORM - shadow only, no border */
 .add-form{background:#fff;border:none;border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh);display:none;}
 .add-form.open{display:block;}
-.btn-add-form{background:none;border:none;cursor:pointer;padding:2px 4px;margin-left:4px;line-height:1;color:var(--cyan);font-size:22px;font-weight:300;transition:transform .15s;}
+.btn-add-form{background:none;border:none;cursor:pointer;padding:2px 4px;margin-left:auto;line-height:1;color:var(--cyan);font-size:22px;font-weight:300;transition:transform .15s;}
 .btn-add-form.open{transform:rotate(45deg);color:var(--magenta);}
-.form-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
 .form-row:last-child{margin-bottom:0;}
 .fi{flex:1;min-width:100px;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:6px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13.5px;color:var(--ink);outline:none;transition:border-color .18s,background .18s;resize:vertical;}
 .fi:focus{background:#fff;border-color:var(--cyan);}
@@ -326,7 +325,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.2</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.3</span>
   </div>
 </div>
 <header>
@@ -674,7 +673,7 @@ function renderTodos(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Todo</span>
-  <span class="section-line">...</span>
+  <span class="section-line"><svg viewBox="75 25 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,100 200,100 150,200" fill="var(--magenta)" opacity="0.9"/><polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.9"/></svg></span>
   <button class="btn-add-form" id="btn-add-todo" onclick="toggleAddForm('todo')" title="追加">＋</button>
 </div>
 <div class="add-form" id="add-form-todo">
@@ -776,11 +775,10 @@ function renderLinks(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Links</span>
-  <span class="section-line">...</span>
+  <span class="section-line"><svg viewBox="75 25 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,100 200,100 150,200" fill="var(--magenta)" opacity="0.9"/><polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.9"/></svg></span>
   <button class="btn-add-form" id="btn-add-link" onclick="toggleAddForm('link')" title="追加">＋</button>
 </div>
 <div class="add-form" id="add-form-link">
-<div class="add-form">
   <div class="form-row">
     <input class="fi" id="ln" placeholder="名前">
     <input class="fi" id="lu" type="url" placeholder="https://...">
@@ -876,7 +874,7 @@ function renderMemos(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Memo</span>
-  <span class="section-line">...</span>
+  <span class="section-line"><svg viewBox="75 25 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,100 200,100 150,200" fill="var(--magenta)" opacity="0.9"/><polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.9"/></svg></span>
   <button class="btn-add-form" id="btn-add-memo" onclick="toggleAddForm('memo')" title="追加">＋</button>
 </div>
 <div class="add-form" id="add-form-memo">
