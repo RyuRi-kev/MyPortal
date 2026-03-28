@@ -57,7 +57,10 @@ main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 .section-count{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);margin-left:auto;}
 
 /* ADD FORM - shadow only, no border */
-.add-form{background:#fff;border:none;border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh);}
+.add-form{background:#fff;border:none;border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh);display:none;}
+.add-form.open{display:block;}
+.btn-add-form{background:none;border:none;cursor:pointer;padding:2px 4px;margin-left:4px;line-height:1;color:var(--cyan);font-size:22px;font-weight:300;transition:transform .15s;}
+.btn-add-form.open{transform:rotate(45deg);color:var(--magenta);}
 .form-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
 .form-row:last-child{margin-bottom:0;}
 .fi{flex:1;min-width:100px;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:6px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13.5px;color:var(--ink);outline:none;transition:border-color .18s,background .18s;resize:vertical;}
@@ -323,7 +326,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver2.8</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.0</span>
   </div>
 </div>
 <header>
@@ -671,10 +674,11 @@ function renderTodos(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Todo</span>
-<span class="section-line"><svg viewBox="75 25 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,100 200,100 150,200" fill="var(--magenta)" opacity="0.9"/><polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.9"/></svg></span>
+<span class="section-line">...</span>
   <span class="section-count">残り ${todos.filter(t=>!t.done).length} 件</span>
+  <button class="btn-add-form" id="btn-add-todo" onclick="toggleAddForm('todo')" title="追加">＋</button>
 </div>
-<div class="add-form">
+<div class="add-form" id="add-form-todo">
   <div class="form-row">
     <input class="fi" id="tt" placeholder="タスクを入力…" onkeydown="if(event.key==='Enter')addTodo()">
   </div>
@@ -731,12 +735,25 @@ ${catTabsHTML('todo',cats,F.todo)}
   });
   setupDrag('todo-list',todos,'mp_todos',renderTodos);
 }
+function toggleAddForm(sec){
+  const form=document.getElementById('add-form-'+sec);
+  const btn=document.getElementById('btn-add-'+sec);
+  const isOpen=form.classList.toggle('open');
+  btn.classList.toggle('open',isOpen);
+  if(isOpen){const fi=form.querySelector('.fi');if(fi)fi.focus();}
+}
+function closeAddForm(sec){
+  const form=document.getElementById('add-form-'+sec);
+  const btn=document.getElementById('btn-add-'+sec);
+  if(form){form.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
   if(!text){toast('タスクを入力してください');return;}
   todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false});
   S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';
-  markUpdated();renderTodos();toast('追加しました');
+  markUpdated();renderTodos();closeAddForm('todo');toast('追加しました');
 }
 function toggleTodo(id){const t=todos.find(x=>x.id===id);if(t){t.done=!t.done;S.set('mp_todos',todos);markUpdated();renderTodos();}}
 function openTodoEdit(id){document.getElementById(`te-${id}`).classList.add('open');}
@@ -760,9 +777,11 @@ function renderLinks(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Links</span>
-  <span class="section-line"><svg viewBox="75 25 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,100 200,100 150,200" fill="var(--magenta)" opacity="0.9"/><polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.9"/></svg></span>
+  <span class="section-line">...</span>
   <span class="section-count">${links.length} 件</span>
+  <button class="btn-add-form" id="btn-add-link" onclick="toggleAddForm('link')" title="追加">＋</button>
 </div>
+<div class="add-form" id="add-form-link">
 <div class="add-form">
   <div class="form-row">
     <input class="fi" id="ln" placeholder="名前">
@@ -828,7 +847,7 @@ function addLink(){
   if(!u){toast('URLを入力してください');return;}
   links.push({id:uid(),name:document.getElementById('ln').value.trim()||u,url:u,cat:document.getElementById('lc').value.trim(),status:''});
   S.set('mp_links',links);document.getElementById('ln').value='';document.getElementById('lu').value='';document.getElementById('lc').value='';
-  markUpdated();renderLinks();toast('追加しました');
+  markUpdated();renderLinks();closeAddForm('link');toast('追加しました');
 }
 function openLinkEdit(id){document.getElementById(`le-${id}`).classList.add('open');}
 function closeLinkEdit(id){document.getElementById(`le-${id}`).classList.remove('open');}
@@ -859,10 +878,11 @@ function renderMemos(){
   sec.innerHTML=`
 <div class="section-header">
   <span class="section-title">Memo</span>
-  <span class="section-line"><svg viewBox="75 25 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,100 200,100 150,200" fill="var(--magenta)" opacity="0.9"/><polygon points="150,150 250,150 200,50" fill="var(--cyan)" opacity="0.9"/></svg></span>
+  <span class="section-line">...</span>
   <span class="section-count">${memos.length} 件</span>
+  <button class="btn-add-form" id="btn-add-memo" onclick="toggleAddForm('memo')" title="追加">＋</button>
 </div>
-<div class="add-form">
+<div class="add-form" id="add-form-memo">
   <div class="form-row"><textarea class="fi" id="mi" placeholder="メモを入力…" rows="3"></textarea></div>
   <div class="form-row">
     <div class="cat-wrap"><input class="fi" id="mc" placeholder="分類（任意）" autocomplete="off"><div class="cat-sug" id="mc-sug"></div></div>
@@ -917,7 +937,7 @@ function addMemo(){
   if(!text){toast('メモを入力してください');return;}
   memos.push({id:uid(),text,cat:document.getElementById('mc').value.trim(),ts:nowStr()});
   S.set('mp_memos',memos);document.getElementById('mi').value='';document.getElementById('mc').value='';
-  markUpdated();renderMemos();toast('保存しました');
+  markUpdated();renderMemos();closeAddForm('memo');toast('保存しました');
 }
 function openMemoEdit(id){document.getElementById(`me-${id}`).classList.add('open');}
 function closeMemoEdit(id){document.getElementById(`me-${id}`).classList.remove('open');}
