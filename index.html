@@ -115,9 +115,8 @@ textarea.fi{min-height:68px;}
 .pin-key.del{font-size:30px;}
 .pin-key.empty{border:none;background:none;cursor:default;}
 .cat-tab-wrap{display:inline-flex;align-items:center;gap:2px;}
-.cat-order-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:10px;padding:1px 3px;line-height:1;border-radius:3px;transition:color .15s,background .15s;}
-.cat-order-btn:hover{color:var(--cyan);background:rgba(0,176,200,.08);}
-.cat-order-btn:disabled{opacity:.25;cursor:default;}
+.cat-order-btn{background:none;border:none;cursor:pointer;font-size:10px;padding:1px 3px;line-height:1;border-radius:3px;transition:color .15s,background .15s;}
+.cat-order-btn.up{color:var(--cyan);} .cat-order-btn.dn{color:var(--magenta);} .cat-order-btn:disabled{opacity:.25;cursor:default;} .cat-order-btn:hover:not(:disabled){background:rgba(0,176,200,.08);}
 
 /* CAT TABS */
 .cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
@@ -654,8 +653,8 @@ function catTabsHTML(type, cats, active){
   cats.forEach(function(c, i){
     html+='<div class="cat-tab-wrap" style="display:inline-flex;align-items:center;gap:2px;">';
     html+='<div class="cat-tab'+(active===c?' active':'')+'" onclick="setFilter(\''+type+'\',\''+esc(c)+'\')">'+esc(c)+'</div>';
-    html+='<button class="cat-order-btn" onclick="moveCat(\''+type+'\',\''+esc(c)+'\',-1)" title="上へ"'+(i===0?' disabled':'')+'>↑</button>';
-    html+='<button class="cat-order-btn" onclick="moveCat(\''+type+'\',\''+esc(c)+'\',1)" title="下へ"'+(i===cats.length-1?' disabled':'')+'>↓</button>';
+    html+='<button class="cat-order-btn up" onclick="moveCat(\''+type+'\',\''+esc(c)+'\',-1)" title="上へ"'+(i===0?' disabled':'')+'>▲</button>';
+    html+='<button class="cat-order-btn dn" onclick="moveCat(\''+type+'\',\''+esc(c)+'\',1)" title="下へ"'+(i===cats.length-1?' disabled':'')+'>▼</button>';
     html+='</div>';
   });
   html+='</div>';
