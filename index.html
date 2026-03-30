@@ -159,7 +159,7 @@ textarea.fi{min-height:68px;}
 .done .t-check{background:var(--grad);border-color:transparent;}
 .todo-txt{font-size:13.5px;}
 .done .todo-txt{text-decoration:line-through;color:var(--muted);}
-.due-badge{font-size:11px;padding:1px 6px;border-radius:4px;white-space:nowrap;font-weight:500;}
+.due-badge{font-size:11px;padding:1px 6px;border-radius:4px;white-space:nowrap;/*font-weight:500;*/}
 .due-over{background:#d6008f1a;color:var(--magenta);}
 .due-today{background:#e050001a;color:#e05000;}
 .due-soon{background:#d4a0171a;color:#d4a017;}
@@ -779,7 +779,7 @@ function formatDue(due){
   if(diff<0)return`${Math.abs(diff)}日超過`;
   if(diff===0)return'今日';
   if(diff===1)return'明日';
-  return`${d.getMonth()+1}/${d.getDate()}`;
+  return`${p(d.getMonth()+1)}.${p(d.getDate())}`;
 }
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
