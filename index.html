@@ -779,7 +779,7 @@ function formatDue(due){
   if(diff<0)return`${Math.abs(diff)}日超過`;
   if(diff===0)return'今日';
   if(diff===1)return'明日';
-  return`${p(d.getMonth()+1)}.${p(d.getDate())}`;
+  return`${d.getMonth()+1}/${d.getDate()}`;
 }
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
