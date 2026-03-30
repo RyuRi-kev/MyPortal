@@ -159,12 +159,6 @@ textarea.fi{min-height:68px;}
 .done .t-check{background:var(--grad);border-color:transparent;}
 .todo-txt{font-size:13.5px;}
 .done .todo-txt{text-decoration:line-through;color:var(--muted);}
-.due-badge{font-size:11px;padding:1px 6px;border-radius:4px;white-space:nowrap;font-weight:500;}
-.due-over{background:#ff3b3022;color:#d93025;}
-.due-today{background:#ff8c0022;color:#e07000;}
-.due-soon{background:#ffd60022;color:#8a6800;}
-.due-ok{background:#1a8a3322;color:#1a6a28;}
-.done .due-badge{opacity:.4;}
 .p-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 .ph{background:#c0392b;}.pm{background:#e67e22;}.pl{background:var(--muted);}
 
@@ -338,7 +332,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.1</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.0</span>
   </div>
 </div>
 <header>
@@ -695,7 +689,6 @@ function renderTodos(){
   </div>
   <div class="form-row">
     <div class="cat-wrap"><input class="fi" id="tc" placeholder="分類（任意）" autocomplete="off"><div class="cat-sug" id="tc-sug"></div></div>
-    <input class="fi" id="td" type="date" style="max-width:140px" title="期限">
     <button class="btn btn-grad btn-sm" onclick="addTodo()">追加</button>
   </div>
 </div>
@@ -722,12 +715,11 @@ ${catTabsHTML('todo',cats,F.todo)}
       <div class="todo-row">
         <div class="t-check" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</div>
         <div class="todo-txt">${esc(t.text)}</div>
-        ${t.due?`<span class="due-badge ${dueBadgeClass(t.due,t.done)}">${formatDue(t.due)}</span>`:''}
       </div>
     </div>
     <div class="item-actions">
-      <button class="btn-action" title="編集" onclick="openTodoEdit('${t.id}')">...</button>
-      <button class="btn-action del" title="削除" onclick="delTodo('${t.id}')">...</button>
+      <button class="btn-action" title="編集" onclick="openTodoEdit('${t.id}')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-action del" title="削除" onclick="delTodo('${t.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
     </div>
   </div>
   <div class="edit-form" id="te-${t.id}">
@@ -736,12 +728,11 @@ ${catTabsHTML('todo',cats,F.todo)}
     </div>
     <div class="form-row">
       <div class="cat-wrap"><input class="fi" id="tec-${t.id}" value="${esc(t.cat||'')}" placeholder="分類" autocomplete="off"><div class="cat-sug" id="tec-sug-${t.id}"></div></div>
-      <input class="fi" id="ted-${t.id}" type="date" style="max-width:140px" value="${t.due||''}" title="期限">
       <button class="btn btn-ghost btn-sm" onclick="closeTodoEdit('${t.id}')">キャンセル</button>
       <button class="btn btn-grad btn-sm" onclick="saveTodoEdit('${t.id}')">保存</button>
     </div>
   </div>
-</div>;
+</div>`;
       g.appendChild(card);
       bindCatAC(`tec-${t.id}`,`tec-sug-${t.id}`,()=>getCats(todos));
     });
@@ -762,31 +753,11 @@ function closeAddForm(sec){
   if(form){form.classList.remove('open');}
   if(btn){btn.classList.remove('open');}
 }
-function dueBadgeClass(due,done){
-  if(done)return'due-ok';
-  const today=new Date();today.setHours(0,0,0,0);
-  const d=new Date(due+'T00:00:00');
-  const diff=Math.round((d-today)/86400000);
-  if(diff<0)return'due-over';
-  if(diff===0)return'due-today';
-  if(diff<=3)return'due-soon';
-  return'due-ok';
-}
-function formatDue(due){
-  const today=new Date();today.setHours(0,0,0,0);
-  const d=new Date(due+'T00:00:00');
-  const diff=Math.round((d-today)/86400000);
-  if(diff<0)return`${Math.abs(diff)}日超過`;
-  if(diff===0)return'今日';
-  if(diff===1)return'明日';
-  return`${d.getMonth()+1}/${d.getDate()}`;
-}
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
   if(!text){toast('タスクを入力してください');return;}
-  const due=document.getElementById('td').value;
-  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false,due:due||undefined});
-  S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';document.getElementById('td').value='';
+  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false});
+  S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';
   markUpdated();renderTodos();closeAddForm('todo');toast('追加しました');
 }
 function toggleTodo(id){const t=todos.find(x=>x.id===id);if(t){t.done=!t.done;S.set('mp_todos',todos);markUpdated();renderTodos();}}
@@ -797,8 +768,6 @@ function saveTodoEdit(id){
   const v=document.getElementById(`tei-${id}`).value.trim();
   if(v)t.text=v;
   t.cat=document.getElementById(`tec-${id}`).value.trim();
-  const due=document.getElementById(`ted-${id}`).value;
-  t.due=due||undefined;
   S.set('mp_todos',todos);markUpdated();renderTodos();toast('更新しました');
 }
 function delTodo(id){confirmDel(()=>{todos=todos.filter(x=>x.id!==id);S.set('mp_todos',todos);markUpdated();renderTodos();toast('削除しました');});}
