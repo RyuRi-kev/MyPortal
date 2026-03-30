@@ -159,6 +159,12 @@ textarea.fi{min-height:68px;}
 .done .t-check{background:var(--grad);border-color:transparent;}
 .todo-txt{font-size:13.5px;}
 .done .todo-txt{text-decoration:line-through;color:var(--muted);}
+.due-badge{font-size:11px;padding:1px 6px;border-radius:4px;white-space:nowrap;font-weight:500;}
+.due-over{background:#ff3b3022;color:#d93025;}
+.due-today{background:#ff8c0022;color:#e07000;}
+.due-soon{background:#ffd60022;color:#8a6800;}
+.due-ok{background:#1a8a3322;color:#1a6a28;}
+.done .due-badge{opacity:.4;}
 .p-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 .ph{background:#c0392b;}.pm{background:#e67e22;}.pl{background:var(--muted);}
 
@@ -689,6 +695,7 @@ function renderTodos(){
   </div>
   <div class="form-row">
     <div class="cat-wrap"><input class="fi" id="tc" placeholder="分類（任意）" autocomplete="off"><div class="cat-sug" id="tc-sug"></div></div>
+    <input class="fi" id="td" type="date" style="max-width:140px" title="期限">
     <button class="btn btn-grad btn-sm" onclick="addTodo()">追加</button>
   </div>
 </div>
@@ -715,6 +722,7 @@ ${catTabsHTML('todo',cats,F.todo)}
       <div class="todo-row">
         <div class="t-check" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</div>
         <div class="todo-txt">${esc(t.text)}</div>
+        ${t.due?`<span class="due-badge ${dueBadgeClass(t.due,t.done)}">${formatDue(t.due)}</span>`:''}
       </div>
     </div>
     <div class="item-actions">
@@ -728,6 +736,7 @@ ${catTabsHTML('todo',cats,F.todo)}
     </div>
     <div class="form-row">
       <div class="cat-wrap"><input class="fi" id="tec-${t.id}" value="${esc(t.cat||'')}" placeholder="分類" autocomplete="off"><div class="cat-sug" id="tec-sug-${t.id}"></div></div>
+      <input class="fi" id="ted-${t.id}" type="date" style="max-width:140px" value="${t.due||''}" title="期限">
       <button class="btn btn-ghost btn-sm" onclick="closeTodoEdit('${t.id}')">キャンセル</button>
       <button class="btn btn-grad btn-sm" onclick="saveTodoEdit('${t.id}')">保存</button>
     </div>
@@ -753,11 +762,31 @@ function closeAddForm(sec){
   if(form){form.classList.remove('open');}
   if(btn){btn.classList.remove('open');}
 }
+function dueBadgeClass(due,done){
+  if(done)return'due-ok';
+  const today=new Date();today.setHours(0,0,0,0);
+  const d=new Date(due+'T00:00:00');
+  const diff=Math.round((d-today)/86400000);
+  if(diff<0)return'due-over';
+  if(diff===0)return'due-today';
+  if(diff<=3)return'due-soon';
+  return'due-ok';
+}
+function formatDue(due){
+  const today=new Date();today.setHours(0,0,0,0);
+  const d=new Date(due+'T00:00:00');
+  const diff=Math.round((d-today)/86400000);
+  if(diff<0)return`${Math.abs(diff)}日超過`;
+  if(diff===0)return'今日';
+  if(diff===1)return'明日';
+  return`${d.getMonth()+1}/${d.getDate()}`;
+}
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
   if(!text){toast('タスクを入力してください');return;}
-  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false});
-  S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';
+  const due=document.getElementById('td').value;
+  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false,due:due||undefined});
+  S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';document.getElementById('td').value='';
   markUpdated();renderTodos();closeAddForm('todo');toast('追加しました');
 }
 function toggleTodo(id){const t=todos.find(x=>x.id===id);if(t){t.done=!t.done;S.set('mp_todos',todos);markUpdated();renderTodos();}}
@@ -768,6 +797,8 @@ function saveTodoEdit(id){
   const v=document.getElementById(`tei-${id}`).value.trim();
   if(v)t.text=v;
   t.cat=document.getElementById(`tec-${id}`).value.trim();
+  const due=document.getElementById(`ted-${id}`).value;
+  t.due=due||undefined;
   S.set('mp_todos',todos);markUpdated();renderTodos();toast('更新しました');
 }
 function delTodo(id){confirmDel(()=>{todos=todos.filter(x=>x.id!==id);S.set('mp_todos',todos);markUpdated();renderTodos();toast('削除しました');});}
