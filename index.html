@@ -332,7 +332,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver3.9</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.0</span>
   </div>
 </div>
 <header>
@@ -876,7 +876,16 @@ async function checkLink(id){
   catch(e){lk.status=e.name==='AbortError'?'ng':'ok';}
   S.set('mp_links',links);renderLinks();
 }
-async function checkAllLinks(){for(const lk of links)await checkLink(lk.id);toast('チェック完了');}
+async function checkAllLinks(){
+  const total=links.length;
+  if(!total)return;
+  const el=document.getElementById('toast');
+  const show=(n)=>{el.textContent=`リンクチェック中… (${n}/${total})`;el.classList.add('show');clearTimeout(el._t);};
+  show(0);
+  for(let i=0;i<total;i++){await checkLink(links[i].id);show(i+1);}
+  el.classList.remove('show');
+  setTimeout(()=>toast('チェック完了'),100);
+}
 
 // ── MEMOS ──────────────────────────────────────────────
 function renderMemos(){
