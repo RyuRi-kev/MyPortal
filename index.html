@@ -339,7 +339,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.4</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.5</span>
   </div>
 </div>
 <header>
@@ -1022,12 +1022,30 @@ function checkUnsaved(){
   }
 }
 
-function exportData(){
-  const blob=new Blob([JSON.stringify({todos,links,memos,exported:new Date().toISOString()},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`portal_${new Date().toISOString().slice(0,10)}.json`;a.click();
-  localStorage.setItem('mp_last_exported', Date.now());
-  checkUnsaved();
-  toast('エクスポート完了');
+async function exportData(){
+  const data=JSON.stringify({todos,links,memos,exported:new Date().toISOString()},null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const filename=`portal_${new Date().toISOString().slice(0,10)}.json`;
+  if(window.showSaveFilePicker){
+    try{
+      const fh=await window.showSaveFilePicker({suggestedName:filename,types:[{description:'JSON',accept:{'application/json':['.json']}}]});
+      const w=await fh.createWritable();
+      await w.write(blob);
+      await w.close();
+      localStorage.setItem('mp_last_exported',Date.now());
+      checkUnsaved();
+      toast('エクスポート完了');
+    }catch(e){
+      if(e.name!=='AbortError') toast('エクスポート失敗');
+      // キャンセル時は何もしない
+    }
+  }else{
+    // iOS Safari等フォールバック
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+    localStorage.setItem('mp_last_exported',Date.now());
+    checkUnsaved();
+    toast('エクスポート完了');
+  }
 }
 function importTrigger(){document.getElementById('imp-file').click();}
 function importData(e){
