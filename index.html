@@ -339,7 +339,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.3</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.4</span>
   </div>
 </div>
 <header>
@@ -696,8 +696,7 @@ function renderTodos(){
   </div>
   <div class="form-row">
     <div class="cat-wrap"><input class="fi" id="tc" placeholder="分類（任意）" autocomplete="off"><div class="cat-sug" id="tc-sug"></div></div>
-    <input class="fi" id="td" type="date" style="max-width:130px" title="期限">
-    <input class="fi" id="ttm" type="time" style="max-width:100px" title="時刻">
+    <div style="display:flex;gap:10px;flex:0 0 auto;"><input class="fi" id="td" type="date" style="max-width:130px" title="期限"><input class="fi" id="ttm" type="time" style="max-width:100px" title="時刻"></div>
     <button class="btn btn-grad btn-sm" onclick="addTodo()">追加</button>
   </div>
 </div>
@@ -738,8 +737,7 @@ ${catTabsHTML('todo',cats,F.todo)}
     </div>
     <div class="form-row">
       <div class="cat-wrap"><input class="fi" id="tec-${t.id}" value="${esc(t.cat||'')}" placeholder="分類" autocomplete="off"><div class="cat-sug" id="tec-sug-${t.id}"></div></div>
-      <input class="fi" id="ted-${t.id}" type="date" style="max-width:130px" value="${t.due||''}" title="期限">
-      <input class="fi" id="tetm-${t.id}" type="time" style="max-width:100px" value="${t.time||''}" title="時刻">
+      <div style="display:flex;gap:10px;flex:0 0 auto;"><input class="fi" id="ted-${t.id}" type="date" style="max-width:130px" value="${t.due||''}" title="期限"><input class="fi" id="tetm-${t.id}" type="time" style="max-width:100px" value="${t.time||''}" title="時刻"></div>
       <button class="btn btn-ghost btn-sm" onclick="closeTodoEdit('${t.id}')">キャンセル</button>
       <button class="btn btn-grad btn-sm" onclick="saveTodoEdit('${t.id}')">保存</button>
     </div>
