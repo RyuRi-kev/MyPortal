@@ -695,7 +695,8 @@ function renderTodos(){
   </div>
   <div class="form-row">
     <div class="cat-wrap"><input class="fi" id="tc" placeholder="分類（任意）" autocomplete="off"><div class="cat-sug" id="tc-sug"></div></div>
-    <input class="fi" id="td" type="date" style="max-width:140px" title="期限">
+    <input class="fi" id="td" type="date" style="max-width:130px" title="期限">
+    <input class="fi" id="ttm" type="time" style="max-width:100px" title="時刻">
     <button class="btn btn-grad btn-sm" onclick="addTodo()">追加</button>
   </div>
 </div>
@@ -722,7 +723,7 @@ ${catTabsHTML('todo',cats,F.todo)}
       <div class="todo-row">
         <div class="t-check" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</div>
         <div class="todo-txt">${esc(t.text)}</div>
-        ${t.due?`<span class="due-badge ${dueBadgeClass(t.due,t.done)}">${formatDue(t.due)}</span>`:''}
+        ${t.due?`<span class="due-badge ${dueBadgeClass(t.due,t.done)}">${formatDue(t.due,t.time)}</span>`:''}
       </div>
     </div>
     <div class="item-actions">
@@ -736,7 +737,8 @@ ${catTabsHTML('todo',cats,F.todo)}
     </div>
     <div class="form-row">
       <div class="cat-wrap"><input class="fi" id="tec-${t.id}" value="${esc(t.cat||'')}" placeholder="分類" autocomplete="off"><div class="cat-sug" id="tec-sug-${t.id}"></div></div>
-      <input class="fi" id="ted-${t.id}" type="date" style="max-width:140px" value="${t.due||''}" title="期限">
+      <input class="fi" id="ted-${t.id}" type="date" style="max-width:130px" value="${t.due||''}" title="期限">
+      <input class="fi" id="tetm-${t.id}" type="time" style="max-width:100px" value="${t.time||''}" title="時刻">
       <button class="btn btn-ghost btn-sm" onclick="closeTodoEdit('${t.id}')">キャンセル</button>
       <button class="btn btn-grad btn-sm" onclick="saveTodoEdit('${t.id}')">保存</button>
     </div>
@@ -772,21 +774,23 @@ function dueBadgeClass(due,done){
   if(diff<=3)return'due-soon';
   return'due-ok';
 }
-function formatDue(due){
+function formatDue(due,time){
   const today=new Date();today.setHours(0,0,0,0);
   const d=new Date(due+'T00:00:00');
   const diff=Math.round((d-today)/86400000);
-  if(diff<0)return`${Math.abs(diff)}日超過`;
-  if(diff===0)return'今日';
-  if(diff===1)return'明日';
-  return`${d.getMonth()+1}/${d.getDate()}`;
+  const ts=time?` ${time}`:'';
+  if(diff<0)return`${Math.abs(diff)}日超過${ts}`;
+  if(diff===0)return`今日${ts}`;
+  if(diff===1)return`明日${ts}`;
+  return`${d.getMonth()+1}/${d.getDate()}${ts}`;
 }
 function addTodo(){
   const text=document.getElementById('tt').value.trim();
   if(!text){toast('タスクを入力してください');return;}
   const due=document.getElementById('td').value;
-  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false,due:due||undefined});
-  S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';document.getElementById('td').value='';
+  const time=document.getElementById('ttm').value;
+  todos.push({id:uid(),text,cat:document.getElementById('tc').value.trim(),done:false,due:due||undefined,time:time||undefined});
+  S.set('mp_todos',todos);document.getElementById('tt').value='';document.getElementById('tc').value='';document.getElementById('td').value='';document.getElementById('ttm').value='';
   markUpdated();renderTodos();closeAddForm('todo');toast('追加しました');
 }
 function toggleTodo(id){const t=todos.find(x=>x.id===id);if(t){t.done=!t.done;S.set('mp_todos',todos);markUpdated();renderTodos();}}
@@ -798,7 +802,9 @@ function saveTodoEdit(id){
   if(v)t.text=v;
   t.cat=document.getElementById(`tec-${id}`).value.trim();
   const due=document.getElementById(`ted-${id}`).value;
+  const time=document.getElementById(`tetm-${id}`).value;
   t.due=due||undefined;
+  t.time=time||undefined;
   S.set('mp_todos',todos);markUpdated();renderTodos();toast('更新しました');
 }
 function delTodo(id){confirmDel(()=>{todos=todos.filter(x=>x.id!==id);S.set('mp_todos',todos);markUpdated();renderTodos();toast('削除しました');});}
