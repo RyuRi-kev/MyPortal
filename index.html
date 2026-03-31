@@ -62,8 +62,8 @@ main{max-width:1100px;margin:0 auto;padding:24px 24px 80px;background:#fff;}
 .btn-add-form.open{transform:rotate(45deg);color:var(--magenta);}
 .form-row{display:flex;gap:10px;margin-bottom:12px;}
 .form-row:last-child{margin-bottom:0;}
-.add-form .form-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-start;}
-.add-form .form-row .btn{margin-top:0;}
+.add-form .form-row{flex-direction:column;}
+.add-form .form-row .btn{width:100%;margin-top:2px;}
 .add-form .form-row .fi{flex:0 1 auto;}
 .fi{flex:1;min-width:100px;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:6px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13.5px;color:var(--ink);outline:none;transition:border-color .18s,background .18s;resize:vertical;}
 .fi:focus{background:#fff;border-color:var(--cyan);}
@@ -339,7 +339,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.4</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.3</span>
   </div>
 </div>
 <header>
@@ -738,7 +738,8 @@ ${catTabsHTML('todo',cats,F.todo)}
     </div>
     <div class="form-row">
       <div class="cat-wrap"><input class="fi" id="tec-${t.id}" value="${esc(t.cat||'')}" placeholder="分類" autocomplete="off"><div class="cat-sug" id="tec-sug-${t.id}"></div></div>
-      <div style="display:flex;gap:4px"><input class="fi" id="ted-${t.id}" type="date" value="${t.due||''}" title="期限"><input class="fi" id="tetm-${t.id}" type="time" value="${t.time||''}" title="時刻"></div>
+      <input class="fi" id="ted-${t.id}" type="date" style="max-width:130px" value="${t.due||''}" title="期限">
+      <input class="fi" id="tetm-${t.id}" type="time" style="max-width:100px" value="${t.time||''}" title="時刻">
       <button class="btn btn-ghost btn-sm" onclick="closeTodoEdit('${t.id}')">キャンセル</button>
       <button class="btn btn-grad btn-sm" onclick="saveTodoEdit('${t.id}')">保存</button>
     </div>
