@@ -302,7 +302,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 
 <div id="pin-lock">
   <div class="pin-logo">P</div>
-  <div class="pin-title">PINを入力してください</div>
+  <div class="pin-title" id="pin-title">PINを入力してください</div>
   <div class="pin-dots">
     <div class="pin-dot" id="pd0"></div>
     <div class="pin-dot" id="pd1"></div>
@@ -330,6 +330,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="pin-key" onclick="pinInput('0')">0</button>
     <button class="pin-key del" onclick="pinDel()">⌫</button>
   </div>
+  <button onclick="pinReset()" style="margin-top:16px;background:none;border:none;color:rgba(255,255,255,.45);font-size:12px;cursor:pointer;text-decoration:underline;">PINを忘れた場合はリセット（全データ削除）</button>
 </div>
 
 <div class="accent-strip"></div>
@@ -339,7 +340,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
     <button class="mnav-btn" id="mn-todo" onclick="jumpTo('sec-todo')">TODO</button>
     <button class="mnav-btn" id="mn-links" onclick="jumpTo('sec-links')">LINKS</button>
     <button class="mnav-btn" id="mn-memo" onclick="jumpTo('sec-memo')">MEMO</button>
-    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.6</span>
+    <span class="footer-ver" style="margin-left:auto;align-self:center;">ver4.7</span>
   </div>
 </div>
 <header>
@@ -387,10 +388,11 @@ footer{position:fixed;bottom:0;left:0;right:0;background:var(--grad);border:none
 
 <script>
 // ── PIN LOCK ──────────────────────────────────────────
-const PIN_HASH='0b91edfb9b92dbe6d542811646110b397dc3ed03deca90cbc9758a4a85dbf622';
 const PIN_LEN=10;
 var pinBuf='';
 var pinUnlocked=false;
+var pinRegStep=0; // 0=off 1=first入力済み
+var pinRegFirst='';
 
 async function sha256(str){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
@@ -418,26 +420,60 @@ function updatePinDots(){
 }
 
 async function pinCheck(){
+  const storedHash=localStorage.getItem('pin_hash');
+  // 登録モード
+  if(!storedHash){
+    if(pinRegStep===0){
+      pinRegFirst=pinBuf;
+      pinRegStep=1;
+      document.getElementById('pin-title').textContent='もう一度入力してください';
+      document.getElementById('pin-error').textContent='';
+      pinBuf=''; updatePinDots(); return;
+    } else {
+      if(pinBuf===pinRegFirst){
+        const h=await sha256(pinBuf);
+        localStorage.setItem('pin_hash',h);
+        pinUnlocked=true;
+        document.getElementById('pin-lock').classList.add('hidden');
+        sessionStorage.setItem('pin_ok','1');
+      } else {
+        document.getElementById('pin-error').textContent='一致しません。最初からやり直してください';
+        pinRegStep=0; pinRegFirst='';
+        pinBuf=''; updatePinDots();
+      }
+      return;
+    }
+  }
+  // 認証モード
   const h=await sha256(pinBuf);
-  if(h===PIN_HASH){
+  if(h===storedHash){
     pinUnlocked=true;
     document.getElementById('pin-lock').classList.add('hidden');
     sessionStorage.setItem('pin_ok','1');
   } else {
     document.getElementById('pin-error').textContent='PINが違います';
-    pinBuf='';
-    updatePinDots();
-    // shake animation
+    pinBuf=''; updatePinDots();
     const lock=document.getElementById('pin-lock');
     lock.style.animation='shake .3s ease';
     setTimeout(()=>lock.style.animation='',300);
   }
 }
 
+function pinReset(){
+  if(!confirm('全データを削除してPINをリセットします。\nエクスポートしていない場合、データは失われます。\n本当に実行しますか？'))return;
+  localStorage.clear();
+  sessionStorage.clear();
+  location.reload();
+}
+
 // セッション中はロック解除済みを維持
 if(sessionStorage.getItem('pin_ok')==='1'){
   document.getElementById('pin-lock').classList.add('hidden');
   pinUnlocked=true;
+}
+// 未登録なら登録モードのタイトルに変更
+if(!localStorage.getItem('pin_hash')){
+  document.getElementById('pin-title').textContent='PINを登録してください（10桁）';
 }
 
 // キーボード入力対応
