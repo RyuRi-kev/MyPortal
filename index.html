@@ -111,16 +111,16 @@ textarea.fi{min-height:68px;}
 /* PIN LOCK */
 #pin-lock{position:fixed;inset:0;background:#ffffff;background-image:radial-gradient(circle at top left, #00b0c8 0%, rgba(0,176,200,.35) 18%, transparent 45%), radial-gradient(circle at bottom right, #d6008f 0%, rgba(214,0,143,.35) 18%, transparent 45%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;}
 #pin-lock.hidden{display:none;}
-.pin-logo{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:36px;font-weight:800;color:#fff;}
-.pin-title{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:rgba(255,255,255,.85);letter-spacing:.05em;}
+.pin-logo{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:36px;font-weight:800;color:#222;}
+.pin-title{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:rgba(0,0,0,.75);letter-spacing:.05em;}
 .pin-dots{display:flex;gap:12px;}
-.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:transparent;transition:background .15s;}
-.pin-dot.filled{background:#fff;border-color:#fff;}
-.pin-error{font-size:12px;color:rgba(255,255,255,.7);height:16px;text-align:center;}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(0,0,0,.4);background:transparent;transition:background .15s;}
+.pin-dot.filled{background:#222;border-color:#222;}
+.pin-error{font-size:12px;color:rgba(0,0,0,.6);height:16px;text-align:center;}
 .pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;touch-action:manipulation;}
-.pin-key{width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;font-family:'Inter',sans-serif;font-size:22px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
-.pin-key:hover{background:rgba(255,255,255,.25);}
-.pin-key:active{background:rgba(255,255,255,.4);transform:scale(.93);}
+.pin-key{width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(0,0,0,.25);background:rgba(255,255,255,.3);color:#222;font-family:'Inter',sans-serif;font-size:22px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+.pin-key:hover{background:rgba(255,255,255,.5);}
+.pin-key:active{background:rgba(255,255,255,.7);transform:scale(.93);}
 .pin-key.del{font-size:25px;}
 .pin-key.empty{border:none;background:none;cursor:default;}
 .cat-tab-wrap{display:inline-flex;align-items:center;gap:2px;}
@@ -285,7 +285,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.85);b
 .net-dots circle{transition:fill-opacity .3s;}
 
 /* CALENDAR */
-.cal-wrap{background:none;box-shadow:none;border-radius:8px;padding:16px;margin-bottom:14px;border:1px solid transparent;background-image:linear-gradient(#0a0e1a,#0a0e1a),linear-gradient(135deg,var(--cyan),var(--magenta));background-origin:border-box;background-clip:padding-box,border-box;}
+.cal-wrap{background:none;box-shadow:none;border-radius:8px;padding:16px;margin-bottom:14px;border:1px solid transparent;background-image:linear-gradient(#ffffff,#ffffff),linear-gradient(135deg,var(--cyan),var(--magenta));background-origin:border-box;background-clip:padding-box,border-box;}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .cal-nav-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:4px 10px;border-radius:6px;color:var(--ink2);transition:background .15s,color .15s;}
 .cal-nav-btn:hover{background:rgba(0,176,200,.08);color:var(--cyan);}
@@ -344,7 +344,7 @@ footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.85);b
     <button class="pin-key" onclick="pinInput('0')">0</button>
     <button class="pin-key del" onclick="pinDel()">⌫</button>
   </div>
-  <button onclick="pinReset()" style="margin-top:16px;background:none;border:none;color:rgba(255,255,255,.45);font-size:12px;cursor:pointer;text-decoration:underline;">PINを忘れた場合はリセット（全データ削除）</button>
+  <button onclick="pinReset()" style="margin-top:16px;background:none;border:none;color:rgba(0,0,0,.45);font-size:12px;cursor:pointer;text-decoration:underline;">PINを忘れた場合はリセット（全データ削除）</button>
 </div>
 
 <div class="accent-strip"></div>
