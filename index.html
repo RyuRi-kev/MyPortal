@@ -801,7 +801,7 @@ ${catTabsHTML('todo',cats,F.todo)}
 
   bindCatAC('tc','tc-sug',()=>getCats(todos));
   const list=document.getElementById('todo-list');
-  if(!vis.length){list.innerHTML='<div class="empty">タスクはありません</div>';return;}
+  if(!vis.length){list.innerHTML='<div class="empty">タスクはありません</div>';if(typeof renderCalendar==='function')renderCalendar();return;}
   // render in cat order (uncategorized last)
   var orderedKeys=cats.filter(function(c){return grouped[c];});
   if(grouped[''])orderedKeys.push('');
